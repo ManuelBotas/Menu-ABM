@@ -1,14 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+enum tipoUsuario {ALUMNO, PROFESOR, ADMINISTRADOR};
+enum estadoUsuario {ACTIVO, INACTIVO};
 // Definición de una estructura para almacenar los datos de usuario
 struct Usuario {
     int id_usuario;
+    enum tipoUsuario tipo;
     char nombre[45];
     char apellido[45];
     char email[255];
     char contrasena[32];
-    char estado[10];
+    enum estadoUsuario estado;
 };
 
 // Definición de una estructura para almacenar los datos de materia
@@ -38,6 +41,7 @@ void altaAlumno(){
     struct Usuario nuevoAlumno;
     printf("Ingrese el id del alumno: ");
     scanf("%d", &nuevoAlumno.id_usuario);
+    nuevoAlumno.tipo = ALUMNO;
     printf("Ingrese el nombre del alumno: ");
     scanf("%s", nuevoAlumno.nombre);
     printf("Ingrese el apellido del alumno: ");
@@ -46,11 +50,13 @@ void altaAlumno(){
     scanf("%s", nuevoAlumno.email);
     printf("Ingrese la contraseña del alumno: ");
     scanf("%s", nuevoAlumno.contrasena);
-    printf("Ingrese el estado del alumno (activo/inactivo): ");
-    scanf("%s", nuevoAlumno.estado);
+    nuevoAlumno.estado = ACTIVO;
 }
 void altaProfesor(){
     struct Usuario nuevoProfesor;
+    printf("Ingrese el id del profesor: ");
+    scanf("%d", &nuevoProfesor.id_usuario);
+    nuevoProfesor.tipo = PROFESOR;
     printf("Ingrese el nombre del profesor: ");
     scanf("%s", nuevoProfesor.nombre);
     printf("Ingrese el apellido del profesor: ");
@@ -59,8 +65,7 @@ void altaProfesor(){
     scanf("%s", nuevoProfesor.email);
     printf("Ingrese la contraseña del profesor: ");
     scanf("%s", nuevoProfesor.contrasena);
-    printf("Ingrese el estado del profesor (activo/inactivo): ");
-    scanf("%s", nuevoProfesor.estado);
+    nuevoProfesor.estado = ACTIVO;
 }
 
 void altaCurso(){
@@ -99,38 +104,18 @@ void bajaAlumno(){
     struct Usuario bajaAlumno;
     printf("Ingrese el id del alumno a dar de baja: ");
     scanf("%d", &bajaAlumno.id_usuario);
-    printf("Ingrese el nombre del alumno a dar de baja: ");
-    scanf("%s", bajaAlumno.nombre);
-    printf("Ingrese el apellido del alumno a dar de baja: ");
-    scanf("%s", bajaAlumno.apellido);
-    printf("Ingrese el email del alumno a dar de baja: ");
-    scanf("%s", bajaAlumno.email);
-    printf("Ingrese la contraseña del alumno a dar de baja: ");
-    scanf("%s", bajaAlumno.contrasena);
-    printf("Ingrese el estado del alumno a dar de baja (activo/inactivo): ");
-    scanf("%s", bajaAlumno.estado);
 }
 
 void bajaProfesor(){
     struct Usuario bajaProfesor;
-    printf("Ingrese el nombre del profesor a dar de baja: ");
-    scanf("%s", bajaProfesor.nombre);
-    printf("Ingrese el apellido del profesor a dar de baja: ");
-    scanf("%s", bajaProfesor.apellido);
-    printf("Ingrese el email del profesor a dar de baja: ");
-    scanf("%s", bajaProfesor.email);
-    printf("Ingrese la contraseña del profesor a dar de baja: ");
-    scanf("%s", bajaProfesor.contrasena);
-    printf("Ingrese el estado del profesor a dar de baja (activo/inactivo): ");
-    scanf("%s", bajaProfesor.estado);
+    printf("Ingrese el id del profesor a dar de baja: ");
+    scanf("%d", &bajaProfesor.id_usuario);
 }
 
 void bajaMateria(){
     struct Materia bajaMateria; 
     printf("Ingrese el id de la materia a dar de baja: ");
     scanf("%d", &bajaMateria.id_materia);
-    printf("Ingrese el nombre de la materia a dar de baja: ");
-    scanf("%s", bajaMateria.nombre);
 }
 
 // funciones para las operaciones de modificación
@@ -149,8 +134,11 @@ void modificarAlumno(){
     printf("Ingrese el estado del alumno a modificar (activo/inactivo): ");
     scanf("%s", modificarAlumno.estado);
 }
+
 void modificarProfesor(){
     struct Usuario modificarProfesor;
+    printf("Ingrese el id del profesor a modificar: ");
+    scanf("%d", &modificarProfesor.id_usuario);
     printf("Ingrese el nombre del profesor a modificar: ");
     scanf("%s", modificarProfesor.nombre);
     printf("Ingrese el apellido del profesor a modificar: ");
@@ -161,14 +149,6 @@ void modificarProfesor(){
     scanf("%s", modificarProfesor.contrasena);
     printf("Ingrese el estado del profesor a modificar (activo/inactivo): ");
     scanf("%s", modificarProfesor.estado);
-}
-
-void modificarMateria(){
-    struct Materia modificarMateria;
-    printf("Ingrese el id de la materia a modificar: ");
-    scanf("%d", &modificarMateria.id_materia);
-    printf("Ingrese el nombre de la materia a modificar: ");
-    scanf("%s", modificarMateria.nombre);
 }
 
 // funciones para las operaciones de consulta
