@@ -185,7 +185,7 @@ void menuPrincipal() {
     int modificacionOpcion;
     int consultaOpcion;
 
-    while (1) {
+    do {
         system("cls"); // Limpiar la pantalla
         printf("----- Menu Principal -----\n");
         printf("1. Alta\n");
@@ -199,7 +199,7 @@ void menuPrincipal() {
         switch (opcion) {
             case 1:
                 // Submenú de alta
-                while (1) {
+                do {
                     system("cls"); // Limpiar la pantalla
                     printf("\n----- Menu de Alta -----\n");
                     printf("1. Alumno\n");
@@ -214,27 +214,24 @@ void menuPrincipal() {
                             altaAlumno();
                             break;
                         case 2:
-                            //altaProfesor();
+                            altaProfesor();
                             break;
                         case 3:
-                            //altaMateria();
+                            altaMateria();
                             break;
                         case 4:
                             // Volver al menú principal
                             break;
                         default:
-                            printf("Opción no válida. Inténtalo de nuevo.\n");
+                            printf("Opción no válida.\n");
+                            TeclaParaContinuar();
                             break;
                     }
-
-                    if (altaOpcion == 4) {
-                        break; // Salir del submenú de alta
-                    }
-                }
+                } while (altaOpcion != 4);
                 break;
             case 2:
                 // Submenú de baja
-                while (1) {
+                do {
                     system("cls"); // Limpiar la pantalla
                     printf("\n----- Menu de Baja -----\n");
                     printf("1. Alumno\n");
@@ -246,30 +243,27 @@ void menuPrincipal() {
 
                     switch (bajaOpcion) {
                         case 1:
-                            //bajaAlumno();
+                            bajaAlumno();
                             break;
                         case 2:
-                            //bajaProfesor();
+                            bajaProfesor();
                             break;
                         case 3:
-                            //bajaMateria();
+                            bajaMateria();
                             break;
                         case 4:
                             // Volver al menú principal
                             break;
                         default:
-                            printf("Opción no válida. Inténtalo de nuevo.\n");
+                            printf("Opción no válida.\n");
+                            TeclaParaContinuar();
                             break;
                     }
-
-                    if (bajaOpcion == 4) {
-                        break; // Salir del submenú de baja
-                    }
-                }
+                } while (bajaOpcion != 4);
                 break;
             case 3:
                 // Submenú de modificación
-                while (1) {
+                do {
                     system("cls"); // Limpiar la pantalla
                     printf("\n----- Menu de Modificacion -----\n");
                     printf("1. Alumno\n");
@@ -281,30 +275,27 @@ void menuPrincipal() {
 
                     switch (modificacionOpcion) {
                         case 1:
-                            //modificarAlumno();
+                            modificarAlumno();
                             break;
                         case 2:
-                            //modificarProfesor();
+                            modificarProfesor();
                             break;
                         case 3:
-                            //modificarMateria();
+                            modificarMateria();
                             break;
                         case 4:
                             // Volver al menú principal
                             break;
                         default:
-                            printf("Opción no válida. Inténtalo de nuevo.\n");
+                            printf("Opción no válida.\n");
+                            TeclaParaContinuar();
                             break;
                     }
-
-                    if (modificacionOpcion == 4) {
-                        break; // Salir del submenú de modificación
-                    }
-                }
+                } while (modificacionOpcion != 4);
                 break;
             case 4:
                 // Submenú de consulta
-                while (1) {
+                do {
                     printf("\n----- Menú de Consulta -----\n");
                     printf("1. Consultar Usuarios\n");
                     printf("2. Consultar Cursos y Materias\n");
@@ -327,23 +318,26 @@ void menuPrincipal() {
                             // Volver al menú principal
                             break;
                         default:
-                            printf("Opción no válida. Inténtalo de nuevo.\n");
+                            printf("Opción no válida.\n");
+                            TeclaParaContinuar();
                             break;
                     }
-
-                    if (consultaOpcion == 4) {
-                        break; // Salir del submenú de consulta
-                    }
-                }
+                } while (consultaOpcion != 4);
                 break;
             case 5:
                 printf("Saliendo del programa. ¡Hasta luego!\n");
-                exit(0);
+                break;
             default:
-                printf("Opción no válida. Inténtalo de nuevo.\n");
+                printf("Opción no válida.\n");
+                TeclaParaContinuar();
                 break;
         }
-    }
+    } while (opcion != 5);
+}
+
+void TeclaParaContinuar() {
+    printf("\nPresiona una tecla para continuar...");
+    getch();
 }
 
 // Implementa las funciones de alta, baja, modificación y consulta aquí
