@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-enum tipoUsuario {ALUMNO, PROFESOR, ADMINISTRADOR};
+enum tipoUsuario {ALUMNO, PROFESOR};
 enum estadoUsuario {ACTIVO, INACTIVO};
 // Definición de una estructura para almacenar los datos de usuario
 struct Usuario {
@@ -112,12 +112,6 @@ void bajaProfesor(){
     scanf("%d", &bajaProfesor.id_usuario);
 }
 
-void bajaMateria(){
-    struct Materia bajaMateria; 
-    printf("Ingrese el id de la materia a dar de baja: ");
-    scanf("%d", &bajaMateria.id_materia);
-}
-
 // funciones para las operaciones de modificación
 void modificarAlumno(){
     struct Usuario modificarAlumno;
@@ -163,32 +157,42 @@ void menuPrincipal() {
     do {
         system("cls"); // Limpiar la pantalla
         printf("----- Menu Principal -----\n");
-        printf("1. Alta\n");
-        printf("2. Baja\n");
-        printf("3. Modificacion\n");
-        printf("4. Consulta\n");
-        printf("5. Salir\n");
+        printf("1. Alumno\n");
+        printf("2. Profesor\n");
+        printf("3. Materia\n");
+        printf("4. Curso\n");
+        printf("5. Calificacion\n");
+        printf("6. Consulta\n");
+        printf("7. Salir\n");
         printf("Selecciona una opcion: ");
         scanf("%d", &opcion);
 
         switch (opcion) {
             case 1:
-                // Submenú de alta
-                submenuAlta();
+                // Submenú de alumno
+                submenuAlumno();
                 break;
             case 2:
-                // Submenú de baja
-                submenuBaja();
+                // Submenú de profesor
+                submenuProfesor();
                 break;
             case 3:
-                // Submenú de modificación
-                submenuModificacion();
+                // Agregar una materia
+                altaMateria();
                 break;
             case 4:
+                // Agregar un curso
+                altaCurso();
+                break;
+            case 5:
+                // Agregar una calificación
+                altaCalificacion();
+                break;
+            case 6:
                 // Submenú de consulta
                 submenuConsulta();
                 break;
-            case 5:
+            case 7:
                 printf("Saliendo del programa. ¡Hasta luego!\n");
                 break;
             default:
@@ -196,32 +200,36 @@ void menuPrincipal() {
                 TeclaParaContinuar();
                 break;
         }
-    } while (opcion != 5);
+    } while (opcion != 7);
 }
 
-void submenuAlta() {
-    int altaOpcion;
+void submenuAlumno() {
+    int aluOpcion;
     do {
         system("cls"); // Limpiar la pantalla
-        printf("\n----- Menu de Alta -----\n");
-        printf("1. Alumno\n");
-        printf("2. Profesor\n");
-        printf("3. Materia\n");
-        printf("4. Volver al Menu Principal\n");
+        printf("\n----- Menu de Alumno -----\n");
+        printf("1. Alta\n");
+        printf("2. Baja\n");
+        printf("3. Modificacion\n");
+        printf("4. Consulta\n");
+        printf("5. Volver al Menu Principal\n");
         printf("Selecciona una opcion: ");
-        scanf("%d", &altaOpcion);
+        scanf("%d", &aluOpcion);
 
-        switch (altaOpcion) {
+        switch (aluOpcion) {
             case 1:
                 altaAlumno();
                 break;
             case 2:
-                altaProfesor();
+                bajaAlumno();
                 break;
             case 3:
-                altaMateria();
+                modificarAlumno();
                 break;
             case 4:
+                // consulta alumnos
+                break;
+            case 5:
                 // Volver al menú principal
                 break;
             default:
@@ -229,65 +237,36 @@ void submenuAlta() {
                 TeclaParaContinuar();
                 break;
         }
-    } while (altaOpcion != 4);
+    } while (aluOpcion != 5);
 }
 
-void submenuBaja() {
-    int altaOpcion;
+void submenuProfesor() {
+    int profOpcion;
     do {
         system("cls"); // Limpiar la pantalla
-        printf("\n----- Menu de Baja -----\n");
-        printf("1. Alumno\n");
-        printf("2. Profesor\n");
-        printf("3. Materia\n");
-        printf("4. Volver al Menu Principal\n");
+        printf("\n----- Menu de Profesor -----\n");
+        printf("1. Alta\n");
+        printf("2. Baja\n");
+        printf("3. Modificacion\n");
+        printf("4. Consulta\n");
+        printf("5. Volver al Menu Principal\n");
         printf("Selecciona una opcion: ");
-        scanf("%d", &altaOpcion);
+        scanf("%d", &profOpcion);
 
-        switch (altaOpcion) {
+        switch (profOpcion) {
             case 1:
-                bajaAlumno();
+                altaProfesor();
                 break;
             case 2:
                 bajaProfesor();
                 break;
             case 3:
-                bajaMateria();
-                break;
-            case 4:
-                // Volver al menú principal
-                break;
-            default:
-                printf("Opción no válida.\n");
-                TeclaParaContinuar();
-                break;
-        }
-    } while (altaOpcion != 4);
-}
-
-void submenuModificacion() {
-    int altaOpcion;
-    do {
-        system("cls"); // Limpiar la pantalla
-        printf("\n----- Menu de Modificacion -----\n");
-        printf("1. Alumno\n");
-        printf("2. Profesor\n");
-        printf("3. Materia\n");
-        printf("4. Volver al Menu Principal\n");
-        printf("Selecciona una opcion: ");
-        scanf("%d", &altaOpcion);
-
-        switch (altaOpcion) {
-            case 1:
-                modificarAlumno();
-                break;
-            case 2:
                 modificarProfesor();
                 break;
-            case 3:
-                modificarMateria();
-                break;
             case 4:
+                // consulta profesores
+                break;
+            case 5:
                 // Volver al menú principal
                 break;
             default:
@@ -295,7 +274,7 @@ void submenuModificacion() {
                 TeclaParaContinuar();
                 break;
         }
-    } while (altaOpcion != 4);
+    } while (profOpcion != 5);
 }
 
 void submenuConsulta() {
