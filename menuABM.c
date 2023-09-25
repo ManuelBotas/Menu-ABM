@@ -37,7 +37,7 @@ struct Calificacion {
 
 
 // funciones para las operaciones de alta
-void altaAlumno(){
+void altaAlumno(FILE *fAlumnos){
     struct Usuario nuevoAlumno;
     printf("Ingrese el id del alumno: ");
     scanf("%d", &nuevoAlumno.id_usuario);
@@ -52,7 +52,7 @@ void altaAlumno(){
     scanf("%s", nuevoAlumno.contrasena);
     nuevoAlumno.estado = ACTIVO;
 }
-void altaProfesor(){
+void altaProfesor(FILE *fProfesores){
     struct Usuario nuevoProfesor;
     printf("Ingrese el id del profesor: ");
     scanf("%d", &nuevoProfesor.id_usuario);
@@ -68,7 +68,7 @@ void altaProfesor(){
     nuevoProfesor.estado = ACTIVO;
 }
 
-void altaCurso(){
+void altaCurso(FILE *fCursos){
     struct Curso nuevoCurso;
     printf("Ingrese el id del curso: ");
     scanf("%d", &nuevoCurso.id_cursada);
@@ -77,7 +77,7 @@ void altaCurso(){
 }
 
 
-void altaMateria(){
+void altaMateria(FILE *fMaterias){
     struct Materia nuevaMateria;
     printf("Ingrese el id de la materia: ");
     scanf("%d", &nuevaMateria.id_materia);
@@ -85,7 +85,7 @@ void altaMateria(){
     scanf("%s", nuevaMateria.nombre);
 }
 
-void altaCalificacion(){
+void altaCalificacion(FILE *fCalificaciones){
     struct Calificacion nuevaCalificacion;
     printf("Ingrese el id de la calificacion: ");
     scanf("%d", &nuevaCalificacion.id_calificacion);
@@ -100,20 +100,20 @@ void altaCalificacion(){
 }
 
 // funciones para las operaciones de baja
-void bajaAlumno(){
+void bajaAlumno(FILE *fAlumnos){
     struct Usuario bajaAlumno;
     printf("Ingrese el id del alumno a dar de baja: ");
     scanf("%d", &bajaAlumno.id_usuario);
 }
 
-void bajaProfesor(){
+void bajaProfesor(FILE *fProfesores){
     struct Usuario bajaProfesor;
     printf("Ingrese el id del profesor a dar de baja: ");
     scanf("%d", &bajaProfesor.id_usuario);
 }
 
 // funciones para las operaciones de modificación
-void modificarAlumno(){
+void modificarAlumno(FILE *fAlumnos){
     struct Usuario modificarAlumno;
     printf("Ingrese el id del alumno a modificar: ");
     scanf("%d", &modificarAlumno.id_usuario);
@@ -129,7 +129,7 @@ void modificarAlumno(){
     scanf("%s", modificarAlumno.estado);
 }
 
-void modificarProfesor(){
+void modificarProfesor(FILE *fProfesores){
     struct Usuario modificarProfesor;
     printf("Ingrese el id del profesor a modificar: ");
     scanf("%d", &modificarProfesor.id_usuario);
@@ -153,7 +153,27 @@ void modificarProfesor(){
 // Función para mostrar el menú principal
 void menuPrincipal() {
     int opcion;
-    
+    FILE *fAlumnos, *fProfesores, *fMaterias, *fCursos, *fCalificaciones;
+    if ((fAlumnos = fopen("alumnos.dat", "rb+")) == NULL)
+    {
+        fAlumnos = fopen("alumnos.dat", "wb+");
+    }
+    if ((fProfesores = fopen("profesores.dat", "rb+")) == NULL)
+    {
+        fProfesores = fopen("profesores.dat", "wb+");
+    }
+    if ((fMaterias = fopen("materias.dat", "rb+")) == NULL)
+    {
+        fMaterias = fopen("materias.dat", "wb+");
+    }
+    if ((fCursos = fopen("cursos.dat", "rb+")) == NULL)
+    {
+        fCursos = fopen("cursos.dat", "wb+");
+    }
+    if ((fCalificaciones = fopen("calificaciones.dat", "rb+")) == NULL)
+    {
+        fCalificaciones = fopen("calificaciones.dat", "wb+");
+    }
     do {
         system("cls"); // Limpiar la pantalla
         printf("----- Menu Principal -----\n");
@@ -170,23 +190,23 @@ void menuPrincipal() {
         switch (opcion) {
             case 1:
                 // Submenú de alumno
-                submenuAlumno();
+                submenuAlumno(fAlumnos);
                 break;
             case 2:
                 // Submenú de profesor
-                submenuProfesor();
+                submenuProfesor(fProfesores);
                 break;
             case 3:
                 // Agregar una materia
-                altaMateria();
+                altaMateria(fMaterias);
                 break;
             case 4:
                 // Agregar un curso
-                altaCurso();
+                altaCurso(fCursos);
                 break;
             case 5:
                 // Agregar una calificación
-                altaCalificacion();
+                altaCalificacion(fCalificaciones);
                 break;
             case 6:
                 // Submenú de consulta
@@ -201,9 +221,14 @@ void menuPrincipal() {
                 break;
         }
     } while (opcion != 7);
+    fclose(fAlumnos);
+    fclose(fProfesores);
+    fclose(fMaterias);
+    fclose(fCursos);
+    fclose(fCalificaciones);
 }
 
-void submenuAlumno() {
+void submenuAlumno(FILE *fAlumnos) {
     int aluOpcion;
     do {
         system("cls"); // Limpiar la pantalla
@@ -218,13 +243,13 @@ void submenuAlumno() {
 
         switch (aluOpcion) {
             case 1:
-                altaAlumno();
+                altaAlumno(fAlumnos);
                 break;
             case 2:
-                bajaAlumno();
+                bajaAlumno(fAlumnos);
                 break;
             case 3:
-                modificarAlumno();
+                modificarAlumno(fAlumnos);
                 break;
             case 4:
                 // consulta alumnos
@@ -240,7 +265,7 @@ void submenuAlumno() {
     } while (aluOpcion != 5);
 }
 
-void submenuProfesor() {
+void submenuProfesor(FILE *fProfesores) {
     int profOpcion;
     do {
         system("cls"); // Limpiar la pantalla
@@ -255,13 +280,13 @@ void submenuProfesor() {
 
         switch (profOpcion) {
             case 1:
-                altaProfesor();
+                altaProfesor(fProfesores);
                 break;
             case 2:
-                bajaProfesor();
+                bajaProfesor(fProfesores);
                 break;
             case 3:
-                modificarProfesor();
+                modificarProfesor(fProfesores);
                 break;
             case 4:
                 // consulta profesores
