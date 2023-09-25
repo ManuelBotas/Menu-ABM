@@ -159,12 +159,7 @@ void modificarProfesor(){
 // Función para mostrar el menú principal
 void menuPrincipal() {
     int opcion;
-
-    int altaOpcion; // Declarar aquí las variables de los submenús
-    int bajaOpcion;
-    int modificacionOpcion;
-    int consultaOpcion;
-
+    
     do {
         system("cls"); // Limpiar la pantalla
         printf("----- Menu Principal -----\n");
@@ -179,130 +174,19 @@ void menuPrincipal() {
         switch (opcion) {
             case 1:
                 // Submenú de alta
-                do {
-                    system("cls"); // Limpiar la pantalla
-                    printf("\n----- Menu de Alta -----\n");
-                    printf("1. Alumno\n");
-                    printf("2. Profesor\n");
-                    printf("3. Materia\n");
-                    printf("4. Volver al Menu Principal\n");
-                    printf("Selecciona una opcion: ");
-                    scanf("%d", &altaOpcion);
-
-                    switch (altaOpcion) {
-                        case 1:
-                            altaAlumno();
-                            break;
-                        case 2:
-                            altaProfesor();
-                            break;
-                        case 3:
-                            altaMateria();
-                            break;
-                        case 4:
-                            // Volver al menú principal
-                            break;
-                        default:
-                            printf("Opción no válida.\n");
-                            TeclaParaContinuar();
-                            break;
-                    }
-                } while (altaOpcion != 4);
+                submenuAlta();
                 break;
             case 2:
                 // Submenú de baja
-                do {
-                    system("cls"); // Limpiar la pantalla
-                    printf("\n----- Menu de Baja -----\n");
-                    printf("1. Alumno\n");
-                    printf("2. Profesor\n");
-                    printf("3. Materia\n");
-                    printf("4. Volver al Menu Principal\n");
-                    printf("Selecciona una opcion: ");
-                    scanf("%d", &bajaOpcion);
-
-                    switch (bajaOpcion) {
-                        case 1:
-                            bajaAlumno();
-                            break;
-                        case 2:
-                            bajaProfesor();
-                            break;
-                        case 3:
-                            bajaMateria();
-                            break;
-                        case 4:
-                            // Volver al menú principal
-                            break;
-                        default:
-                            printf("Opción no válida.\n");
-                            TeclaParaContinuar();
-                            break;
-                    }
-                } while (bajaOpcion != 4);
+                submenuBaja();
                 break;
             case 3:
                 // Submenú de modificación
-                do {
-                    system("cls"); // Limpiar la pantalla
-                    printf("\n----- Menu de Modificacion -----\n");
-                    printf("1. Alumno\n");
-                    printf("2. Profesor\n");
-                    printf("3. Materia\n");
-                    printf("4. Volver al Menu Principal\n");
-                    printf("Selecciona una opcion: ");
-                    scanf("%d", &modificacionOpcion);
-
-                    switch (modificacionOpcion) {
-                        case 1:
-                            modificarAlumno();
-                            break;
-                        case 2:
-                            modificarProfesor();
-                            break;
-                        case 3:
-                            modificarMateria();
-                            break;
-                        case 4:
-                            // Volver al menú principal
-                            break;
-                        default:
-                            printf("Opción no válida.\n");
-                            TeclaParaContinuar();
-                            break;
-                    }
-                } while (modificacionOpcion != 4);
+                submenuModificacion();
                 break;
             case 4:
                 // Submenú de consulta
-                do {
-                    printf("\n----- Menú de Consulta -----\n");
-                    printf("1. Consultar Usuarios\n");
-                    printf("2. Consultar Cursos y Materias\n");
-                    printf("3. Consultar Calificaciones\n");
-                    printf("4. Volver al Menú Principal\n");
-                    printf("Selecciona una opción: ");
-                    scanf("%d", &consultaOpcion);
-
-                    switch (consultaOpcion) {
-                        case 1:
-                            //consultarUsuarios();
-                            break;
-                        case 2:
-                            //consultarCursosMaterias();
-                            break;
-                        case 3:
-                            //consultarCalificaciones();
-                            break;
-                        case 4:
-                            // Volver al menú principal
-                            break;
-                        default:
-                            printf("Opción no válida.\n");
-                            TeclaParaContinuar();
-                            break;
-                    }
-                } while (consultaOpcion != 4);
+                submenuConsulta();
                 break;
             case 5:
                 printf("Saliendo del programa. ¡Hasta luego!\n");
@@ -313,6 +197,138 @@ void menuPrincipal() {
                 break;
         }
     } while (opcion != 5);
+}
+
+void submenuAlta() {
+    int altaOpcion;
+    do {
+        system("cls"); // Limpiar la pantalla
+        printf("\n----- Menu de Alta -----\n");
+        printf("1. Alumno\n");
+        printf("2. Profesor\n");
+        printf("3. Materia\n");
+        printf("4. Volver al Menu Principal\n");
+        printf("Selecciona una opcion: ");
+        scanf("%d", &altaOpcion);
+
+        switch (altaOpcion) {
+            case 1:
+                altaAlumno();
+                break;
+            case 2:
+                altaProfesor();
+                break;
+            case 3:
+                altaMateria();
+                break;
+            case 4:
+                // Volver al menú principal
+                break;
+            default:
+                printf("Opción no válida.\n");
+                TeclaParaContinuar();
+                break;
+        }
+    } while (altaOpcion != 4);
+}
+
+void submenuBaja() {
+    int altaOpcion;
+    do {
+        system("cls"); // Limpiar la pantalla
+        printf("\n----- Menu de Baja -----\n");
+        printf("1. Alumno\n");
+        printf("2. Profesor\n");
+        printf("3. Materia\n");
+        printf("4. Volver al Menu Principal\n");
+        printf("Selecciona una opcion: ");
+        scanf("%d", &altaOpcion);
+
+        switch (altaOpcion) {
+            case 1:
+                bajaAlumno();
+                break;
+            case 2:
+                bajaProfesor();
+                break;
+            case 3:
+                bajaMateria();
+                break;
+            case 4:
+                // Volver al menú principal
+                break;
+            default:
+                printf("Opción no válida.\n");
+                TeclaParaContinuar();
+                break;
+        }
+    } while (altaOpcion != 4);
+}
+
+void submenuModificacion() {
+    int altaOpcion;
+    do {
+        system("cls"); // Limpiar la pantalla
+        printf("\n----- Menu de Modificacion -----\n");
+        printf("1. Alumno\n");
+        printf("2. Profesor\n");
+        printf("3. Materia\n");
+        printf("4. Volver al Menu Principal\n");
+        printf("Selecciona una opcion: ");
+        scanf("%d", &altaOpcion);
+
+        switch (altaOpcion) {
+            case 1:
+                modificarAlumno();
+                break;
+            case 2:
+                modificarProfesor();
+                break;
+            case 3:
+                modificarMateria();
+                break;
+            case 4:
+                // Volver al menú principal
+                break;
+            default:
+                printf("Opción no válida.\n");
+                TeclaParaContinuar();
+                break;
+        }
+    } while (altaOpcion != 4);
+}
+
+void submenuConsulta() {
+    int altaOpcion;
+    do {
+        system("cls"); // Limpiar la pantalla
+        printf("\n----- Menu de Consulta -----\n");
+        printf("1. Consultar Usuarios\n");
+        printf("2. Consultar Cursos y Materias\n");
+        printf("3. Consultar Calificaciones\n");
+        printf("4. Volver al Menu Principal\n");
+        printf("Selecciona una opcion: ");
+        scanf("%d", &altaOpcion);
+
+        switch (altaOpcion) {
+            case 1:
+                //consultarUsuarios();
+                break;
+            case 2:
+                //consultarCursosMaterias();
+                break;
+            case 3:
+                //consultarCalificaciones();
+                break;
+            case 4:
+                // Volver al menú principal
+                break;
+            default:
+                printf("Opción no válida.\n");
+                TeclaParaContinuar();
+                break;
+        }
+    } while (altaOpcion != 4);
 }
 
 void TeclaParaContinuar() {
