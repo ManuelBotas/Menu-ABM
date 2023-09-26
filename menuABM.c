@@ -51,6 +51,7 @@ void altaAlumno(FILE *fAlumnos){
     printf("Ingrese la contraseña del alumno: ");
     scanf("%s", nuevoAlumno.contrasena);
     nuevoAlumno.estado = ACTIVO;
+    fwrite(&nuevoAlumno, sizeof(struct Usuario), 1, fAlumnos);
 }
 void altaProfesor(FILE *fProfesores){
     struct Usuario nuevoProfesor;
@@ -66,6 +67,7 @@ void altaProfesor(FILE *fProfesores){
     printf("Ingrese la contraseña del profesor: ");
     scanf("%s", nuevoProfesor.contrasena);
     nuevoProfesor.estado = ACTIVO;
+    fwrite(&nuevoProfesor, sizeof(struct Usuario), 1, fProfesores);
 }
 
 void altaCurso(FILE *fCursos){
@@ -74,6 +76,7 @@ void altaCurso(FILE *fCursos){
     scanf("%d", &nuevoCurso.id_cursada);
     printf("Ingrese el año y división del curso: ");
     scanf("%s", nuevoCurso.anio_division);
+    fwrite(&nuevoCurso, sizeof(struct Curso), 1, fCursos);
 }
 
 
@@ -83,6 +86,7 @@ void altaMateria(FILE *fMaterias){
     scanf("%d", &nuevaMateria.id_materia);
     printf("Ingrese el nombre de la materia: ");
     scanf("%s", nuevaMateria.nombre);
+    fwrite(&nuevaMateria, sizeof(struct Materia), 1, fMaterias);
 }
 
 void altaCalificacion(FILE *fCalificaciones){
@@ -97,6 +101,7 @@ void altaCalificacion(FILE *fCalificaciones){
     scanf("%d", &nuevaCalificacion.nota);
     printf("Ingrese el numero de examen: ");
     scanf("%d", &nuevaCalificacion.num_examen);
+    fwrite(&nuevaCalificacion, sizeof(struct Calificacion), 1, fCalificaciones);
 }
 
 // funciones para las operaciones de baja
