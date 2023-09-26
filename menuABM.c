@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <conio.h>
 
 enum tipoUsuario {ALUMNO, PROFESOR};
 enum estadoUsuario {ACTIVO, INACTIVO};
@@ -35,6 +36,26 @@ struct Calificacion {
     int num_examen;
 };
 
+// Prototipos de funciones
+void menuPrincipal();
+void submenuAlumno(FILE *);
+void submenuProfesor(FILE *);
+void submenuConsulta();
+void TeclaParaContinuar();
+void altaAlumno(FILE *);
+void altaProfesor(FILE *);
+void altaMateria(FILE *);
+void altaCurso(FILE *);
+void altaCalificacion(FILE *);
+void bajaAlumno(FILE *);
+void bajaProfesor(FILE *);
+void modificarAlumno(FILE *);
+void modificarProfesor(FILE *);
+
+int main() {
+    menuPrincipal(); // Llama a la función del menú principal
+    return 0;
+}
 
 // funciones para las operaciones de alta
 void altaAlumno(FILE *fAlumnos){
@@ -48,7 +69,7 @@ void altaAlumno(FILE *fAlumnos){
     scanf("%s", nuevoAlumno.apellido);
     printf("Ingrese el email del alumno: ");
     scanf("%s", nuevoAlumno.email);
-    printf("Ingrese la contraseña del alumno: ");
+    printf("Ingrese la contrase%ca del alumno: ", 164);
     scanf("%s", nuevoAlumno.contrasena);
     nuevoAlumno.estado = ACTIVO;
     fwrite(&nuevoAlumno, sizeof(struct Usuario), 1, fAlumnos);
@@ -64,7 +85,7 @@ void altaProfesor(FILE *fProfesores){
     scanf("%s", nuevoProfesor.apellido);
     printf("Ingrese el email del profesor: ");
     scanf("%s", nuevoProfesor.email);
-    printf("Ingrese la contraseña del profesor: ");
+    printf("Ingrese la contrase%Ca del profesor: ", 164);
     scanf("%s", nuevoProfesor.contrasena);
     nuevoProfesor.estado = ACTIVO;
     fwrite(&nuevoProfesor, sizeof(struct Usuario), 1, fProfesores);
@@ -74,7 +95,7 @@ void altaCurso(FILE *fCursos){
     struct Curso nuevoCurso;
     printf("Ingrese el id del curso: ");
     scanf("%d", &nuevoCurso.id_cursada);
-    printf("Ingrese el año y división del curso: ");
+    printf("Ingrese el a%co y divisi%cn del curso: ", 164, 162);
     scanf("%s", nuevoCurso.anio_division);
     fwrite(&nuevoCurso, sizeof(struct Curso), 1, fCursos);
 }
@@ -91,7 +112,7 @@ void altaMateria(FILE *fMaterias){
 
 void altaCalificacion(FILE *fCalificaciones){
     struct Calificacion nuevaCalificacion;
-    printf("Ingrese el id de la calificacion: ");
+    printf("Ingrese el id de la calificaci%cn: ", 162);
     scanf("%d", &nuevaCalificacion.id_calificacion);
     printf("Ingrese el id del alumno: ");
     scanf("%d", &nuevaCalificacion.id_alumno);
@@ -99,7 +120,7 @@ void altaCalificacion(FILE *fCalificaciones){
     scanf("%d", &nuevaCalificacion.id_materia);
     printf("Ingrese la nota: ");
     scanf("%d", &nuevaCalificacion.nota);
-    printf("Ingrese el numero de examen: ");
+    printf("Ingrese el n%cmero de examen: ", 163);
     scanf("%d", &nuevaCalificacion.num_examen);
     fwrite(&nuevaCalificacion, sizeof(struct Calificacion), 1, fCalificaciones);
 }
@@ -181,15 +202,15 @@ void menuPrincipal() {
     }
     do {
         system("cls"); // Limpiar la pantalla
-        printf("----- Menu Principal -----\n");
+        printf("----- Men%c Principal -----\n", 163);
         printf("1. Alumno\n");
         printf("2. Profesor\n");
         printf("3. Materia\n");
         printf("4. Curso\n");
-        printf("5. Calificacion\n");
+        printf("5. Calificaci%cn\n", 162);
         printf("6. Consulta\n");
         printf("7. Salir\n");
-        printf("Selecciona una opcion: ");
+        printf("Selecciona una opci%cn: ", 162);
         scanf("%d", &opcion);
 
         switch (opcion) {
@@ -218,10 +239,10 @@ void menuPrincipal() {
                 submenuConsulta();
                 break;
             case 7:
-                printf("Saliendo del programa. ¡Hasta luego!\n");
+                printf("Saliendo del programa. %cHasta luego!\n", 173);
                 break;
             default:
-                printf("Opción no válida.\n");
+                printf("Opci%cn no v%clida.\n", 162, 160);
                 TeclaParaContinuar();
                 break;
         }
@@ -237,13 +258,13 @@ void submenuAlumno(FILE *fAlumnos) {
     int aluOpcion;
     do {
         system("cls"); // Limpiar la pantalla
-        printf("\n----- Menu de Alumno -----\n");
+        printf("\n----- Men%c de Alumno -----\n", 163);
         printf("1. Alta\n");
         printf("2. Baja\n");
-        printf("3. Modificacion\n");
+        printf("3. Modificaci%cn\n", 162);
         printf("4. Consulta\n");
-        printf("5. Volver al Menu Principal\n");
-        printf("Selecciona una opcion: ");
+        printf("5. Volver al Men%c Principal\n", 163);
+        printf("Selecciona una opci%cn: ", 162);
         scanf("%d", &aluOpcion);
 
         switch (aluOpcion) {
@@ -263,7 +284,7 @@ void submenuAlumno(FILE *fAlumnos) {
                 // Volver al menú principal
                 break;
             default:
-                printf("Opción no válida.\n");
+                printf("Opci%cn no v%clida.\n", 162, 160);
                 TeclaParaContinuar();
                 break;
         }
@@ -274,13 +295,13 @@ void submenuProfesor(FILE *fProfesores) {
     int profOpcion;
     do {
         system("cls"); // Limpiar la pantalla
-        printf("\n----- Menu de Profesor -----\n");
+        printf("\n----- Men%c de Profesor -----\n", 163);
         printf("1. Alta\n");
         printf("2. Baja\n");
-        printf("3. Modificacion\n");
+        printf("3. Modificaci%cn\n", 162);
         printf("4. Consulta\n");
-        printf("5. Volver al Menu Principal\n");
-        printf("Selecciona una opcion: ");
+        printf("5. Volver al Men%c Principal\n", 163);
+        printf("Selecciona una opci%cn: ", 162);
         scanf("%d", &profOpcion);
 
         switch (profOpcion) {
@@ -300,7 +321,7 @@ void submenuProfesor(FILE *fProfesores) {
                 // Volver al menú principal
                 break;
             default:
-                printf("Opción no válida.\n");
+                printf("Opci%cn no v%clida.\n", 162, 160);
                 TeclaParaContinuar();
                 break;
         }
@@ -311,12 +332,12 @@ void submenuConsulta() {
     int altaOpcion;
     do {
         system("cls"); // Limpiar la pantalla
-        printf("\n----- Menu de Consulta -----\n");
+        printf("\n----- Men%c de Consulta -----\n", 163);
         printf("1. Consultar Usuarios\n");
         printf("2. Consultar Cursos y Materias\n");
         printf("3. Consultar Calificaciones\n");
-        printf("4. Volver al Menu Principal\n");
-        printf("Selecciona una opcion: ");
+        printf("4. Volver al Men%c Principal\n", 163);
+        printf("Selecciona una opci%cn: ", 162);
         scanf("%d", &altaOpcion);
 
         switch (altaOpcion) {
@@ -333,7 +354,7 @@ void submenuConsulta() {
                 // Volver al menú principal
                 break;
             default:
-                printf("Opción no válida.\n");
+                printf("Opci%cn no v%clida.\n", 162, 160);
                 TeclaParaContinuar();
                 break;
         }
@@ -346,9 +367,3 @@ void TeclaParaContinuar() {
 }
 
 // Implementa las funciones de alta, baja, modificación y consulta aquí
-
-int main() {
-    menuPrincipal(); // Llama a la función del menú principal
-    return 0;
-}
-
