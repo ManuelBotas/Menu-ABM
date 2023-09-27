@@ -51,6 +51,8 @@ void bajaAlumno(FILE *);
 void bajaProfesor(FILE *);
 void modificarAlumno(FILE *);
 void modificarProfesor(FILE *);
+void consultarUsuarios();
+void consultarAlumnos();
 
 int main() {
     menuPrincipal(); // Llama a la función del menú principal
@@ -126,11 +128,35 @@ void altaCalificacion(FILE *fCalificaciones){
 }
 
 // funciones para las operaciones de baja
-void bajaAlumno(FILE *fAlumnos){
-    struct Usuario bajaAlumno;
-    printf("Ingrese el id del alumno a dar de baja: ");
-    scanf("%d", &bajaAlumno.id_usuario);
+void bajaAlumno(FILE *fAlumnos) {
+    struct Usuario alumno;
+    int id;
+    printf("Ingrese el ID del alumno a dar de baja: ");
+    scanf("%d", &id);
+    int encontrado = 0; // flag que indica si se encontró el alumno
+    rewind(fAlumnos);
+    FILE *temp = fopen("temp.dat", "wb"); 
+    while (fread(&alumno, sizeof(struct Usuario), 1, fAlumnos) == 1) {
+        if (alumno.tipo == ALUMNO && alumno.id_usuario == id) {
+            encontrado = 1;
+        } else {
+            fwrite(&alumno, sizeof(struct Usuario), 1, temp); // escribe el registro en el archivo temporal
+        }
+    }
+    fclose(fAlumnos);
+    fclose(temp);
+    remove("alumnos.dat"); // borrado del archivo original
+    rename("temp.dat", "alumnos.dat"); // renombrado del archivo temporal
+
+    if (encontrado) {
+        printf("El alumno con ID %d ha sido dado de baja.\n", id);
+        TeclaParaContinuar();
+    } else {
+        printf("No se encontro ningun alumno con ID %d.\n", id);
+        TeclaParaContinuar();
+    }
 }
+
 
 void bajaProfesor(FILE *fProfesores){
     struct Usuario bajaProfesor;
@@ -170,11 +196,6 @@ void modificarProfesor(FILE *fProfesores){
     printf("Ingrese el estado del profesor a modificar (activo/inactivo): ");
     scanf("%s", modificarProfesor.estado);
 }
-
-// funciones para las operaciones de consulta
-//void consultarUsuarios();
-//void consultarCursosMaterias();
-//void consultarCalificaciones();
 
 // Función para mostrar el menú principal
 void menuPrincipal() {
@@ -278,10 +299,9 @@ void submenuAlumno(FILE *fAlumnos) {
                 modificarAlumno(fAlumnos);
                 break;
             case 4:
-                // consulta alumnos
+                consultarAlumnos(fAlumnos);
                 break;
             case 5:
-                // Volver al menú principal
                 break;
             default:
                 printf("Opci%cn no v%clida.\n", 162, 160);
@@ -366,4 +386,24 @@ void TeclaParaContinuar() {
     getch();
 }
 
-// Implementa las funciones de alta, baja, modificación y consulta aquí
+void consultarAlumnos(FILE *fAlumnos){
+    struct Usuario alumno;
+    rewind(fAlumnos);
+    int hayAlumnos = 0;
+    while (fread(&alumno, sizeof(struct Usuario), 1, fAlumnos) == 1){
+        if (alumno.tipo == ALUMNO){
+            printf("\nId: %d\n", alumno.id_usuario);
+            printf("Nombre: %s\n", alumno.nombre);
+            printf("Apellido: %s\n", alumno.apellido);
+            printf("Email: %s\n", alumno.email);
+            printf("Contrase%ca: %s\n", 164, alumno.contrasena);
+            printf("Estado: %d\n", alumno.estado);
+            hayAlumnos = 1;
+        } 
+    }
+    if (!hayAlumnos){
+        printf("\nNo hay alumnos cargados.\n");
+    }
+    TeclaParaContinuar();
+}
+
