@@ -75,7 +75,8 @@ void altaAlumno(FILE *fAlumnos){
             printf("Ya existe un alumno con ese id, pero se encuentra inactivo.\n");
             printf("Desea darlo de alta? (s/n): ");
             char opcion;
-            scanf("%s", &opcion);
+            fflush(stdin);
+            scanf("%c", &opcion);
             if (opcion == 's'){
                 alumno.estado = ACTIVO;
                 fseek(fAlumnos, -sizeof(Usuario), SEEK_CUR);
