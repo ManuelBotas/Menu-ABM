@@ -42,6 +42,8 @@ void submenuAlumno(FILE *);
 void submenuProfesor(FILE *);
 void submenuConsulta();
 void TeclaParaContinuar();
+const char* getTipoUsuario(enum tipoUsuario);
+const char* getEstadoUsuario(enum estadoUsuario);
 void altaAlumno(FILE *);
 void altaProfesor(FILE *);
 void altaMateria(FILE *);
@@ -88,7 +90,7 @@ void altaProfesor(FILE *fProfesores){
     scanf("%s", nuevoProfesor.apellido);
     printf("Ingrese el email del profesor: ");
     scanf("%s", nuevoProfesor.email);
-    printf("Ingrese la contrase%Ca del profesor: ", 164);
+    printf("Ingrese la contrase%ca del profesor: ", 164);
     scanf("%s", nuevoProfesor.contrasena);
     nuevoProfesor.estado = ACTIVO;
     fseek(fProfesores, 0L, SEEK_END);
@@ -390,6 +392,28 @@ void TeclaParaContinuar() {
     getch();
 }
 
+const char* getTipoUsuario(enum tipoUsuario tipo) {
+    switch (tipo) {
+        case ALUMNO:
+            return "Alumno";
+        case PROFESOR:
+            return "Profesor";
+        default:
+            return "Desconocido";
+    }
+}
+
+const char* getEstadoUsuario(enum estadoUsuario estado) {
+    switch (estado) {
+        case ACTIVO:
+            return "Activo";
+        case INACTIVO:
+            return "Inactivo";
+        default:
+            return "Desconocido";
+    }
+}
+
 void consultarAlumnos(FILE *fAlumnos){
     struct Usuario alumno;
     rewind(fAlumnos);
@@ -401,7 +425,7 @@ void consultarAlumnos(FILE *fAlumnos){
             printf("Apellido: %s\n", alumno.apellido);
             printf("Email: %s\n", alumno.email);
             printf("Contrase%ca: %s\n", 164, alumno.contrasena);
-            printf("Estado: %d\n", alumno.estado);
+            printf("Estado: %s\n", getEstadoUsuario(alumno.estado));
             hayAlumnos = 1;
         } 
     }
