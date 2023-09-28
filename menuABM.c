@@ -64,10 +64,24 @@ int main() {
 // funciones para las operaciones de alta
 void altaAlumno(FILE *fAlumnos){
     Usuario nuevoAlumno;
+    Usuario alumno;
     printf("Ingrese el id del alumno: ");
     scanf("%d", &nuevoAlumno.id_usuario);
-    if (buscarAlumno(fAlumnos, nuevoAlumno.id_usuario).id_usuario != 0){
-        printf("Ya existe un alumno con ese id.\n");
+    alumno = buscarAlumno(fAlumnos, nuevoAlumno.id_usuario);
+    if (alumno.id_usuario == nuevoAlumno.id_usuario){
+        if (alumno.estado == ACTIVO){
+            printf("Ya existe un alumno con ese id.\n");
+        } else {
+            printf("Ya existe un alumno con ese id, pero se encuentra inactivo.\n");
+            printf("Desea darlo de alta? (s/n): ");
+            char opcion;
+            scanf("%s", &opcion);
+            if (opcion == 's'){
+                alumno.estado = ACTIVO;
+                fseek(fAlumnos, -sizeof(Usuario), SEEK_CUR);
+                fwrite(&alumno, sizeof(Usuario), 1, fAlumnos);
+            }
+        }
         TeclaParaContinuar();
     } else {
         nuevoAlumno.tipo = ALUMNO;
@@ -147,13 +161,23 @@ void bajaAlumno(FILE *fAlumnos) {
     printf("Ingrese el ID del alumno a dar de baja: ");
     scanf("%d", &id);
     alumno = buscarAlumno(fAlumnos, id);
-    if (alumno.id_usuario == 0){
-        printf("No existe un alumno con ese id.\n");
+    if (alumno.id_usuario == id){
+        if (alumno.estado == INACTIVO){
+            printf("El alumno ya se encuentra inactivo.\n");
+        } else {
+            printf("Desea dar de baja al alumno? (s/n): ");
+            char opcion;
+            scanf("%s", &opcion);
+            if (opcion == 's'){
+                alumno.estado = INACTIVO;
+                fseek(fAlumnos, -sizeof(Usuario), SEEK_CUR);
+                fwrite(&alumno, sizeof(Usuario), 1, fAlumnos);
+            }
+        }
         TeclaParaContinuar();
     } else {
-        alumno.estado = INACTIVO;
-        fseek(fAlumnos, -sizeof(Usuario), SEEK_CUR);
-        fwrite(&alumno, sizeof(Usuario), 1, fAlumnos);
+        printf("No existe un alumno con ese id.\n");
+        TeclaParaContinuar();
     }
 }
 
