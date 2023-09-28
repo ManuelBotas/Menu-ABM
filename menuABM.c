@@ -74,6 +74,7 @@ void altaAlumno(FILE *fAlumnos){
     printf("Ingrese la contrase%ca del alumno: ", 164);
     scanf("%s", nuevoAlumno.contrasena);
     nuevoAlumno.estado = ACTIVO;
+    fseek(fAlumnos, 0L, SEEK_END);
     fwrite(&nuevoAlumno, sizeof(struct Usuario), 1, fAlumnos);
 }
 void altaProfesor(FILE *fProfesores){
@@ -90,6 +91,7 @@ void altaProfesor(FILE *fProfesores){
     printf("Ingrese la contrase%Ca del profesor: ", 164);
     scanf("%s", nuevoProfesor.contrasena);
     nuevoProfesor.estado = ACTIVO;
+    fseek(fProfesores, 0L, SEEK_END);
     fwrite(&nuevoProfesor, sizeof(struct Usuario), 1, fProfesores);
 }
 
@@ -99,6 +101,7 @@ void altaCurso(FILE *fCursos){
     scanf("%d", &nuevoCurso.id_cursada);
     printf("Ingrese el a%co y divisi%cn del curso: ", 164, 162);
     scanf("%s", nuevoCurso.anio_division);
+    fseek(fCursos, 0L, SEEK_END);
     fwrite(&nuevoCurso, sizeof(struct Curso), 1, fCursos);
 }
 
@@ -109,6 +112,7 @@ void altaMateria(FILE *fMaterias){
     scanf("%d", &nuevaMateria.id_materia);
     printf("Ingrese el nombre de la materia: ");
     scanf("%s", nuevaMateria.nombre);
+    fseek(fMaterias, 0L, SEEK_END);
     fwrite(&nuevaMateria, sizeof(struct Materia), 1, fMaterias);
 }
 
@@ -124,6 +128,7 @@ void altaCalificacion(FILE *fCalificaciones){
     scanf("%d", &nuevaCalificacion.nota);
     printf("Ingrese el n%cmero de examen: ", 163);
     scanf("%d", &nuevaCalificacion.num_examen);
+    fseek(fCalificaciones, 0L, SEEK_END);
     fwrite(&nuevaCalificacion, sizeof(struct Calificacion), 1, fCalificaciones);
 }
 
@@ -135,18 +140,17 @@ void bajaAlumno(FILE *fAlumnos) {
     scanf("%d", &id);
     int encontrado = 0; // flag que indica si se encontró el alumno
     rewind(fAlumnos);
-    FILE *temp = fopen("temp.dat", "wb"); 
-    while (fread(&alumno, sizeof(struct Usuario), 1, fAlumnos) == 1) {
+    fread(&alumno, sizeof(struct Usuario), 1, fAlumnos);
+    while (!feof(fAlumnos) && !encontrado) {
         if (alumno.tipo == ALUMNO && alumno.id_usuario == id) {
             encontrado = 1;
+            alumno.estado = INACTIVO;
+            fseek(fAlumnos, -sizeof(struct Usuario), SEEK_CUR);
+            fwrite(&alumno, sizeof(struct Usuario), 1, fAlumnos);
         } else {
-            fwrite(&alumno, sizeof(struct Usuario), 1, temp); // escribe el registro en el archivo temporal
+            fread(&alumno, sizeof(struct Usuario), 1, fAlumnos);
         }
     }
-    fclose(fAlumnos);
-    fclose(temp);
-    remove("alumnos.dat"); // borrado del archivo original
-    rename("temp.dat", "alumnos.dat"); // renombrado del archivo temporal
 
     if (encontrado) {
         printf("El alumno con ID %d ha sido dado de baja.\n", id);
