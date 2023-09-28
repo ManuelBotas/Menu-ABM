@@ -66,18 +66,23 @@ void altaAlumno(FILE *fAlumnos){
     Usuario nuevoAlumno;
     printf("Ingrese el id del alumno: ");
     scanf("%d", &nuevoAlumno.id_usuario);
-    nuevoAlumno.tipo = ALUMNO;
-    printf("Ingrese el nombre del alumno: ");
-    scanf("%s", nuevoAlumno.nombre);
-    printf("Ingrese el apellido del alumno: ");
-    scanf("%s", nuevoAlumno.apellido);
-    printf("Ingrese el email del alumno: ");
-    scanf("%s", nuevoAlumno.email);
-    printf("Ingrese la contrase%ca del alumno: ", 164);
-    scanf("%s", nuevoAlumno.contrasena);
-    nuevoAlumno.estado = ACTIVO;
-    fseek(fAlumnos, 0L, SEEK_END);
-    fwrite(&nuevoAlumno, sizeof(Usuario), 1, fAlumnos);
+    if (buscarAlumno(fAlumnos, nuevoAlumno.id_usuario).id_usuario != 0){
+        printf("Ya existe un alumno con ese id.\n");
+        TeclaParaContinuar();
+    } else {
+        nuevoAlumno.tipo = ALUMNO;
+        printf("Ingrese el nombre del alumno: ");
+        scanf("%s", nuevoAlumno.nombre);
+        printf("Ingrese el apellido del alumno: ");
+        scanf("%s", nuevoAlumno.apellido);
+        printf("Ingrese el email del alumno: ");
+        scanf("%s", nuevoAlumno.email);
+        printf("Ingrese la contrase%ca del alumno: ", 164);
+        scanf("%s", nuevoAlumno.contrasena);
+        nuevoAlumno.estado = ACTIVO;
+        fseek(fAlumnos, 0L, SEEK_END);
+        fwrite(&nuevoAlumno, sizeof(Usuario), 1, fAlumnos);
+    }
 }
 
 void altaProfesor(FILE *fProfesores){
@@ -141,29 +146,16 @@ void bajaAlumno(FILE *fAlumnos) {
     int id;
     printf("Ingrese el ID del alumno a dar de baja: ");
     scanf("%d", &id);
-    int encontrado = 0; // flag que indica si se encontró el alumno
-    rewind(fAlumnos);
-    fread(&alumno, sizeof(Usuario), 1, fAlumnos);
-    while (!feof(fAlumnos) && !encontrado) {
-        if (alumno.tipo == ALUMNO && alumno.id_usuario == id) {
-            encontrado = 1;
-            alumno.estado = INACTIVO;
-            fseek(fAlumnos, -sizeof(Usuario), SEEK_CUR);
-            fwrite(&alumno, sizeof(Usuario), 1, fAlumnos);
-        } else {
-            fread(&alumno, sizeof(Usuario), 1, fAlumnos);
-        }
-    }
-
-    if (encontrado) {
-        printf("El alumno con ID %d ha sido dado de baja.\n", id);
+    alumno = buscarAlumno(fAlumnos, id);
+    if (alumno.id_usuario == 0){
+        printf("No existe un alumno con ese id.\n");
         TeclaParaContinuar();
     } else {
-        printf("No se encontro ningun alumno con ID %d.\n", id);
-        TeclaParaContinuar();
+        alumno.estado = INACTIVO;
+        fseek(fAlumnos, -sizeof(Usuario), SEEK_CUR);
+        fwrite(&alumno, sizeof(Usuario), 1, fAlumnos);
     }
 }
-
 
 void bajaProfesor(FILE *fProfesores){
     Usuario bajaProfesor;
