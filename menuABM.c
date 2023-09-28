@@ -37,6 +37,15 @@ struct Calificacion {
 };
 
 // Prototipos de funciones
+void altaAlumno(FILE *);
+void altaProfesor(FILE *);
+void altaCurso(FILE *);
+void altaMateria(FILE *);
+void altaCalificacion(FILE *);
+void bajaAlumno(FILE *);
+void bajaProfesor(FILE *);
+void modificarAlumno(FILE *);
+void modificarProfesor(FILE *);
 void menuPrincipal();
 void submenuAlumno(FILE *);
 void submenuProfesor(FILE *);
@@ -44,17 +53,8 @@ void submenuConsulta();
 void TeclaParaContinuar();
 const char* getTipoUsuario(enum tipoUsuario);
 const char* getEstadoUsuario(enum estadoUsuario);
-void altaAlumno(FILE *);
-void altaProfesor(FILE *);
-void altaMateria(FILE *);
-void altaCurso(FILE *);
-void altaCalificacion(FILE *);
-void bajaAlumno(FILE *);
-void bajaProfesor(FILE *);
-void modificarAlumno(FILE *);
-void modificarProfesor(FILE *);
-void consultarUsuarios();
-void consultarAlumnos();
+struct Usuario buscarAlumno(FILE *, int);
+void consultarAlumnos(FILE *);
 
 int main() {
     menuPrincipal(); // Llama a la función del menú principal
@@ -79,6 +79,7 @@ void altaAlumno(FILE *fAlumnos){
     fseek(fAlumnos, 0L, SEEK_END);
     fwrite(&nuevoAlumno, sizeof(struct Usuario), 1, fAlumnos);
 }
+
 void altaProfesor(FILE *fProfesores){
     struct Usuario nuevoProfesor;
     printf("Ingrese el id del profesor: ");
@@ -412,6 +413,16 @@ const char* getEstadoUsuario(enum estadoUsuario estado) {
         default:
             return "Desconocido";
     }
+}
+
+struct Usuario buscarAlumno(FILE *fAlumnos, int id) {
+    struct Usuario alumno;
+    rewind(fAlumnos);
+    fread(&alumno, sizeof(struct Usuario), 1, fAlumnos);
+    while (!feof(fAlumnos) && alumno.id_usuario != id) {
+        fread(&alumno, sizeof(struct Usuario), 1, fAlumnos);
+    }
+    return alumno;
 }
 
 void consultarAlumnos(FILE *fAlumnos){
