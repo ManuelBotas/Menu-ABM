@@ -2,39 +2,39 @@
 #include <stdlib.h>
 #include <conio.h>
 
-enum tipoUsuario {ALUMNO, PROFESOR};
-enum estadoUsuario {ACTIVO, INACTIVO};
+typedef enum {ALUMNO, PROFESOR}tipoUsuario;
+typedef enum {ACTIVO, INACTIVO}estadoUsuario;
 // Definición de una estructura para almacenar los datos de usuario
-struct Usuario {
+typedef struct {
     int id_usuario;
-    enum tipoUsuario tipo;
+    tipoUsuario tipo;
     char nombre[45];
     char apellido[45];
     char email[255];
     char contrasena[32];
-    enum estadoUsuario estado;
-};
+    estadoUsuario estado;
+}Usuario;
 
 // Definición de una estructura para almacenar los datos de materia
-struct Materia {
+typedef struct {
     int id_materia;
     char nombre[45];
-};
+}Materia;
 
 // Definición de una estructura para almacenar los datos de curso
-struct Curso {
+typedef struct {
     int id_cursada;
     char anio_division[45];
-};
+}Curso;
 
 // Definición de una estructura para almacenar las calificaciones
-struct Calificacion {
+typedef struct {
     int id_calificacion;
     int id_alumno;
     int id_materia;
     int nota;
     int num_examen;
-};
+}Calificacion;
 
 // Prototipos de funciones
 void altaAlumno(FILE *);
@@ -51,9 +51,9 @@ void submenuAlumno(FILE *);
 void submenuProfesor(FILE *);
 void submenuConsulta();
 void TeclaParaContinuar();
-const char* getTipoUsuario(enum tipoUsuario);
-const char* getEstadoUsuario(enum estadoUsuario);
-struct Usuario buscarAlumno(FILE *, int);
+const char* getTipoUsuario(tipoUsuario);
+const char* getEstadoUsuario(estadoUsuario);
+Usuario buscarAlumno(FILE *, int);
 void consultarAlumnos(FILE *);
 
 int main() {
@@ -63,7 +63,7 @@ int main() {
 
 // funciones para las operaciones de alta
 void altaAlumno(FILE *fAlumnos){
-    struct Usuario nuevoAlumno;
+    Usuario nuevoAlumno;
     printf("Ingrese el id del alumno: ");
     scanf("%d", &nuevoAlumno.id_usuario);
     nuevoAlumno.tipo = ALUMNO;
@@ -77,11 +77,11 @@ void altaAlumno(FILE *fAlumnos){
     scanf("%s", nuevoAlumno.contrasena);
     nuevoAlumno.estado = ACTIVO;
     fseek(fAlumnos, 0L, SEEK_END);
-    fwrite(&nuevoAlumno, sizeof(struct Usuario), 1, fAlumnos);
+    fwrite(&nuevoAlumno, sizeof(Usuario), 1, fAlumnos);
 }
 
 void altaProfesor(FILE *fProfesores){
-    struct Usuario nuevoProfesor;
+    Usuario nuevoProfesor;
     printf("Ingrese el id del profesor: ");
     scanf("%d", &nuevoProfesor.id_usuario);
     nuevoProfesor.tipo = PROFESOR;
@@ -95,32 +95,32 @@ void altaProfesor(FILE *fProfesores){
     scanf("%s", nuevoProfesor.contrasena);
     nuevoProfesor.estado = ACTIVO;
     fseek(fProfesores, 0L, SEEK_END);
-    fwrite(&nuevoProfesor, sizeof(struct Usuario), 1, fProfesores);
+    fwrite(&nuevoProfesor, sizeof(Usuario), 1, fProfesores);
 }
 
 void altaCurso(FILE *fCursos){
-    struct Curso nuevoCurso;
+    Curso nuevoCurso;
     printf("Ingrese el id del curso: ");
     scanf("%d", &nuevoCurso.id_cursada);
     printf("Ingrese el a%co y divisi%cn del curso: ", 164, 162);
     scanf("%s", nuevoCurso.anio_division);
     fseek(fCursos, 0L, SEEK_END);
-    fwrite(&nuevoCurso, sizeof(struct Curso), 1, fCursos);
+    fwrite(&nuevoCurso, sizeof(Curso), 1, fCursos);
 }
 
 
 void altaMateria(FILE *fMaterias){
-    struct Materia nuevaMateria;
+    Materia nuevaMateria;
     printf("Ingrese el id de la materia: ");
     scanf("%d", &nuevaMateria.id_materia);
     printf("Ingrese el nombre de la materia: ");
     scanf("%s", nuevaMateria.nombre);
     fseek(fMaterias, 0L, SEEK_END);
-    fwrite(&nuevaMateria, sizeof(struct Materia), 1, fMaterias);
+    fwrite(&nuevaMateria, sizeof(Materia), 1, fMaterias);
 }
 
 void altaCalificacion(FILE *fCalificaciones){
-    struct Calificacion nuevaCalificacion;
+    Calificacion nuevaCalificacion;
     printf("Ingrese el id de la calificaci%cn: ", 162);
     scanf("%d", &nuevaCalificacion.id_calificacion);
     printf("Ingrese el id del alumno: ");
@@ -132,26 +132,26 @@ void altaCalificacion(FILE *fCalificaciones){
     printf("Ingrese el n%cmero de examen: ", 163);
     scanf("%d", &nuevaCalificacion.num_examen);
     fseek(fCalificaciones, 0L, SEEK_END);
-    fwrite(&nuevaCalificacion, sizeof(struct Calificacion), 1, fCalificaciones);
+    fwrite(&nuevaCalificacion, sizeof(Calificacion), 1, fCalificaciones);
 }
 
 // funciones para las operaciones de baja
 void bajaAlumno(FILE *fAlumnos) {
-    struct Usuario alumno;
+    Usuario alumno;
     int id;
     printf("Ingrese el ID del alumno a dar de baja: ");
     scanf("%d", &id);
     int encontrado = 0; // flag que indica si se encontró el alumno
     rewind(fAlumnos);
-    fread(&alumno, sizeof(struct Usuario), 1, fAlumnos);
+    fread(&alumno, sizeof(Usuario), 1, fAlumnos);
     while (!feof(fAlumnos) && !encontrado) {
         if (alumno.tipo == ALUMNO && alumno.id_usuario == id) {
             encontrado = 1;
             alumno.estado = INACTIVO;
-            fseek(fAlumnos, -sizeof(struct Usuario), SEEK_CUR);
-            fwrite(&alumno, sizeof(struct Usuario), 1, fAlumnos);
+            fseek(fAlumnos, -sizeof(Usuario), SEEK_CUR);
+            fwrite(&alumno, sizeof(Usuario), 1, fAlumnos);
         } else {
-            fread(&alumno, sizeof(struct Usuario), 1, fAlumnos);
+            fread(&alumno, sizeof(Usuario), 1, fAlumnos);
         }
     }
 
@@ -166,14 +166,14 @@ void bajaAlumno(FILE *fAlumnos) {
 
 
 void bajaProfesor(FILE *fProfesores){
-    struct Usuario bajaProfesor;
+    Usuario bajaProfesor;
     printf("Ingrese el id del profesor a dar de baja: ");
     scanf("%d", &bajaProfesor.id_usuario);
 }
 
 // funciones para las operaciones de modificación
 void modificarAlumno(FILE *fAlumnos){
-    struct Usuario modificarAlumno;
+    Usuario modificarAlumno;
     printf("Ingrese el id del alumno a modificar: ");
     scanf("%d", &modificarAlumno.id_usuario);
     printf("Ingrese el nombre del alumno a modificar: ");
@@ -189,7 +189,7 @@ void modificarAlumno(FILE *fAlumnos){
 }
 
 void modificarProfesor(FILE *fProfesores){
-    struct Usuario modificarProfesor;
+    Usuario modificarProfesor;
     printf("Ingrese el id del profesor a modificar: ");
     scanf("%d", &modificarProfesor.id_usuario);
     printf("Ingrese el nombre del profesor a modificar: ");
@@ -393,7 +393,7 @@ void TeclaParaContinuar() {
     getch();
 }
 
-const char* getTipoUsuario(enum tipoUsuario tipo) {
+const char* getTipoUsuario(tipoUsuario tipo) {
     switch (tipo) {
         case ALUMNO:
             return "Alumno";
@@ -404,7 +404,7 @@ const char* getTipoUsuario(enum tipoUsuario tipo) {
     }
 }
 
-const char* getEstadoUsuario(enum estadoUsuario estado) {
+const char* getEstadoUsuario(estadoUsuario estado) {
     switch (estado) {
         case ACTIVO:
             return "Activo";
@@ -415,21 +415,21 @@ const char* getEstadoUsuario(enum estadoUsuario estado) {
     }
 }
 
-struct Usuario buscarAlumno(FILE *fAlumnos, int id) {
-    struct Usuario alumno;
+Usuario buscarAlumno(FILE *fAlumnos, int id) {
+    Usuario alumno;
     rewind(fAlumnos);
-    fread(&alumno, sizeof(struct Usuario), 1, fAlumnos);
+    fread(&alumno, sizeof(Usuario), 1, fAlumnos);
     while (!feof(fAlumnos) && alumno.id_usuario != id) {
-        fread(&alumno, sizeof(struct Usuario), 1, fAlumnos);
+        fread(&alumno, sizeof(Usuario), 1, fAlumnos);
     }
     return alumno;
 }
 
 void consultarAlumnos(FILE *fAlumnos){
-    struct Usuario alumno;
+    Usuario alumno;
     rewind(fAlumnos);
     int hayAlumnos = 0;
-    while (fread(&alumno, sizeof(struct Usuario), 1, fAlumnos) == 1){
+    while (fread(&alumno, sizeof(Usuario), 1, fAlumnos) == 1){
         if (alumno.tipo == ALUMNO){
             printf("\nId: %d\n", alumno.id_usuario);
             printf("Nombre: %s\n", alumno.nombre);
