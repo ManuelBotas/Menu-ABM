@@ -168,7 +168,8 @@ void bajaAlumno(FILE *fAlumnos) {
         } else {
             printf("Desea dar de baja al alumno? (s/n): ");
             char opcion;
-            scanf("%s", &opcion);
+            fflush(stdin);
+            scanf("%c", &opcion);
             if (opcion == 's'){
                 alumno.estado = INACTIVO;
                 fseek(fAlumnos, -sizeof(Usuario), SEEK_CUR);
