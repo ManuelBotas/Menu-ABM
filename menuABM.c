@@ -54,7 +54,9 @@ void TeclaParaContinuar();
 const char* getTipoUsuario(tipoUsuario);
 const char* getEstadoUsuario(estadoUsuario);
 Usuario buscarAlumno(FILE *, int);
+Usuario buscarProfesor(FILE *, int);
 void consultarAlumnos(FILE *);
+void consultarProfesores(FILE *);
 
 int main() {
     menuPrincipal(); // Llama a la función del menú principal
@@ -102,20 +104,40 @@ void altaAlumno(FILE *fAlumnos){
 
 void altaProfesor(FILE *fProfesores){
     Usuario nuevoProfesor;
+    Usuario profesor;
     printf("Ingrese el id del profesor: ");
     scanf("%d", &nuevoProfesor.id_usuario);
-    nuevoProfesor.tipo = PROFESOR;
-    printf("Ingrese el nombre del profesor: ");
-    scanf("%s", nuevoProfesor.nombre);
-    printf("Ingrese el apellido del profesor: ");
-    scanf("%s", nuevoProfesor.apellido);
-    printf("Ingrese el email del profesor: ");
-    scanf("%s", nuevoProfesor.email);
-    printf("Ingrese la contrase%ca del profesor: ", 164);
-    scanf("%s", nuevoProfesor.contrasena);
-    nuevoProfesor.estado = ACTIVO;
-    fseek(fProfesores, 0L, SEEK_END);
-    fwrite(&nuevoProfesor, sizeof(Usuario), 1, fProfesores);
+    profesor = buscarProfesor(fProfesores, nuevoProfesor.id_usuario);
+    if (profesor.id_usuario == nuevoProfesor.id_usuario){
+        if (profesor.estado == ACTIVO){
+            printf("Ya existe un profesor con ese id.\n");
+        } else {
+            printf("Ya existe un profesor con ese id, pero se encuentra inactivo.\n");
+            printf("Desea darlo de alta? (s/n): ");
+            char opcion;
+            fflush(stdin);
+            scanf("%c", &opcion);
+            if (opcion == 's'){
+                profesor.estado = ACTIVO;
+                fseek(fProfesores, -sizeof(Usuario), SEEK_CUR);
+                fwrite(&profesor, sizeof(Usuario), 1, fProfesores);
+            }
+        }
+        TeclaParaContinuar();
+    } else {
+        nuevoProfesor.tipo = PROFESOR;
+        printf("Ingrese el nombre del profesor: ");
+        scanf("%s", nuevoProfesor.nombre);
+        printf("Ingrese el apellido del profesor: ");
+        scanf("%s", nuevoProfesor.apellido);
+        printf("Ingrese el email del profesor: ");
+        scanf("%s", nuevoProfesor.email);
+        printf("Ingrese la contrase%ca del profesor: ", 164);
+        scanf("%s", nuevoProfesor.contrasena);
+        nuevoProfesor.estado = ACTIVO;
+        fseek(fProfesores, 0L, SEEK_END);
+        fwrite(&nuevoProfesor, sizeof(Usuario), 1, fProfesores);
+    }
 }
 
 void altaCurso(FILE *fCursos){
@@ -183,10 +205,31 @@ void bajaAlumno(FILE *fAlumnos) {
     }
 }
 
-void bajaProfesor(FILE *fProfesores){
-    Usuario bajaProfesor;
-    printf("Ingrese el id del profesor a dar de baja: ");
-    scanf("%d", &bajaProfesor.id_usuario);
+void bajaProfesor(FILE *fProfesores) {
+    Usuario profesor;
+    int id;
+    printf("Ingrese el ID del profesor a dar de baja: ");
+    scanf("%d", &id);
+    profesor = buscarAlumno(fProfesores, id);
+    if (profesor.id_usuario == id){
+        if (profesor.estado == INACTIVO){
+            printf("El profesor ya se encuentra inactivo.\n");
+        } else {
+            printf("Desea dar de baja al profesor? (s/n): ");
+            char opcion;
+            fflush(stdin);
+            scanf("%c", &opcion);
+            if (opcion == 's'){
+                profesor.estado = INACTIVO;
+                fseek(fProfesores, -sizeof(Usuario), SEEK_CUR);
+                fwrite(&profesor, sizeof(Usuario), 1, fProfesores);
+            }
+        }
+        TeclaParaContinuar();
+    } else {
+        printf("No existe un profesor con ese id.\n");
+        TeclaParaContinuar();
+    }
 }
 
 // funciones para las operaciones de modificación
@@ -360,7 +403,7 @@ void submenuProfesor(FILE *fProfesores) {
                 modificarProfesor(fProfesores);
                 break;
             case 4:
-                // consulta profesores
+                consultarProfesores(fProfesores);
                 break;
             case 5:
                 // Volver al menú principal
@@ -433,6 +476,17 @@ const char* getEstadoUsuario(estadoUsuario estado) {
     }
 }
 
+
+Usuario buscarProfesor(FILE *fProfesores, int id) {
+    Usuario profesor;
+    rewind(fProfesores);
+    fread(&profesor, sizeof(Usuario), 1, fProfesores);
+    while (!feof(fProfesores) && profesor.id_usuario != id) {
+        fread(&profesor, sizeof(Usuario), 1, fProfesores);
+    }
+    return profesor;
+}
+
 Usuario buscarAlumno(FILE *fAlumnos, int id) {
     Usuario alumno;
     rewind(fAlumnos);
@@ -460,6 +514,27 @@ void consultarAlumnos(FILE *fAlumnos){
     }
     if (!hayAlumnos){
         printf("\nNo hay alumnos cargados.\n");
+    }
+    TeclaParaContinuar();
+}
+
+void consultarProfesores(FILE *fProfesores){
+    Usuario profesor;
+    rewind(fProfesores);
+    int hayProfesores = 0;
+    while (fread(&profesor, sizeof(Usuario), 1, fProfesores) == 1){
+        if (profesor.tipo == PROFESOR){
+            printf("\nId: %d\n", profesor.id_usuario);
+            printf("Nombre: %s\n", profesor.nombre);
+            printf("Apellido: %s\n", profesor.apellido);
+            printf("Email: %s\n", profesor.email);
+            printf("Contrase%ca: %s\n", 164, profesor.contrasena);
+            printf("Estado: %s\n", getEstadoUsuario(profesor.estado));
+            hayProfesores = 1;
+        } 
+    }
+    if (!hayProfesores){
+        printf("\nNo hay profesores cargados.\n");
     }
     TeclaParaContinuar();
 }
