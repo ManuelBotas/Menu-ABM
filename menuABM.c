@@ -49,6 +49,7 @@ void modificarProfesor(FILE *);
 void menuPrincipal();
 void submenuAlumno(FILE *);
 void submenuProfesor(FILE *);
+void submenuMateria(FILE *);
 void submenuConsulta();
 void TeclaParaContinuar();
 const char* getTipoUsuario(tipoUsuario);
@@ -57,6 +58,7 @@ Usuario buscarAlumno(FILE *, int);
 Usuario buscarProfesor(FILE *, int);
 void consultarAlumnos(FILE *);
 void consultarProfesores(FILE *);
+void consultarMaterias(FILE *);
 
 int main() {
     menuPrincipal(); // Llama a la función del menú principal
@@ -140,17 +142,6 @@ void altaProfesor(FILE *fProfesores){
     }
 }
 
-void altaCurso(FILE *fCursos){
-    Curso nuevoCurso;
-    printf("Ingrese el id del curso: ");
-    scanf("%d", &nuevoCurso.id_cursada);
-    printf("Ingrese el a%co y divisi%cn del curso: ", 164, 162);
-    scanf("%s", nuevoCurso.anio_division);
-    fseek(fCursos, 0L, SEEK_END);
-    fwrite(&nuevoCurso, sizeof(Curso), 1, fCursos);
-}
-
-
 void altaMateria(FILE *fMaterias){
     Materia nuevaMateria;
     printf("Ingrese el id de la materia: ");
@@ -159,6 +150,16 @@ void altaMateria(FILE *fMaterias){
     scanf("%s", nuevaMateria.nombre);
     fseek(fMaterias, 0L, SEEK_END);
     fwrite(&nuevaMateria, sizeof(Materia), 1, fMaterias);
+}
+
+void altaCurso(FILE *fCursos){
+    Curso nuevoCurso;
+    printf("Ingrese el id del curso: ");
+    scanf("%d", &nuevoCurso.id_cursada);
+    printf("Ingrese el a%co y divisi%cn del curso: ", 164, 162);
+    scanf("%s", nuevoCurso.anio_division);
+    fseek(fCursos, 0L, SEEK_END);
+    fwrite(&nuevoCurso, sizeof(Curso), 1, fCursos);
 }
 
 void altaCalificacion(FILE *fCalificaciones){
@@ -312,8 +313,8 @@ void menuPrincipal() {
                 submenuProfesor(fProfesores);
                 break;
             case 3:
-                // Agregar una materia
-                altaMateria(fMaterias);
+                // Submenú de materia
+                submenuMateria(fMaterias);
                 break;
             case 4:
                 // Agregar un curso
@@ -416,6 +417,35 @@ void submenuProfesor(FILE *fProfesores) {
     } while (profOpcion != 5);
 }
 
+void submenuMateria(FILE *fMaterias) {
+    int matOpcion;
+    do {
+        system("cls"); // Limpiar la pantalla
+        printf("\n----- Men%c de Materia -----\n", 163);
+        printf("1. Alta\n");
+        printf("2. Consulta\n");
+        printf("3. Volver al Men%c Principal\n", 163);
+        printf("Selecciona una opci%cn: ", 162);
+        scanf("%d", &matOpcion);
+
+        switch (matOpcion) {
+            case 1:
+                altaMateria(fMaterias);
+                break;
+            case 2:
+                consultarMaterias(fMaterias);
+                break;
+            case 3:
+                // Volver al menú principal
+                break;
+            default:
+                printf("Opci%cn no v%clida.\n", 162, 160);
+                TeclaParaContinuar();
+                break;
+        }
+    } while (matOpcion != 3);
+}
+
 void submenuConsulta() {
     int altaOpcion;
     do {
@@ -497,6 +527,16 @@ Usuario buscarAlumno(FILE *fAlumnos, int id) {
     return alumno;
 }
 
+Materia buscarMateria(FILE *fMaterias, int id) {
+    Materia materia;
+    rewind(fMaterias);
+    fread(&materia, sizeof(Materia), 1, fMaterias);
+    while (!feof(fMaterias) && materia.id_materia != id) {
+        fread(&materia, sizeof(Materia), 1, fMaterias);
+    }
+    return materia;
+}
+
 void consultarAlumnos(FILE *fAlumnos){
     Usuario alumno;
     rewind(fAlumnos);
@@ -535,6 +575,21 @@ void consultarProfesores(FILE *fProfesores){
     }
     if (!hayProfesores){
         printf("\nNo hay profesores cargados.\n");
+    }
+    TeclaParaContinuar();
+}
+
+void consultarMaterias(FILE *fMaterias){
+    Materia materia;
+    rewind(fMaterias);
+    int hayMaterias = 0;
+    while (fread(&materia, sizeof(Materia), 1, fMaterias) == 1){
+        printf("\nId: %d\n", materia.id_materia);
+        printf("Nombre: %s\n", materia.nombre);
+        hayMaterias = 1;
+    }
+    if (!hayMaterias){
+        printf("\nNo hay materias cargadas.\n");
     }
     TeclaParaContinuar();
 }
