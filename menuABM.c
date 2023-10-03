@@ -235,35 +235,71 @@ void bajaProfesor(FILE *fProfesores) {
 
 // funciones para las operaciones de modificación
 void modificarAlumno(FILE *fAlumnos){
-    Usuario modificarAlumno;
+    Usuario alumno;
+    int id;
     printf("Ingrese el id del alumno a modificar: ");
-    scanf("%d", &modificarAlumno.id_usuario);
-    printf("Ingrese el nombre del alumno a modificar: ");
-    scanf("%s", modificarAlumno.nombre);
-    printf("Ingrese el apellido del alumno a modificar: ");
-    scanf("%s", modificarAlumno.apellido);
-    printf("Ingrese el email del alumno a modificar: ");
-    scanf("%s", modificarAlumno.email);
-    printf("Ingrese la contraseña del alumno a modificar: ");
-    scanf("%s", modificarAlumno.contrasena);
-    printf("Ingrese el estado del alumno a modificar (activo/inactivo): ");
-    scanf("%s", modificarAlumno.estado);
+    scanf("%d", &id);
+    alumno = buscarAlumno(fAlumnos, id);
+    if (alumno.id_usuario == id){
+        printf("Ingrese el nombre del alumno a modificar: ");
+        scanf("%s", alumno.nombre);
+        printf("Ingrese el apellido del alumno a modificar: ");
+        scanf("%s", alumno.apellido);
+        printf("Ingrese el email del alumno a modificar: ");
+        scanf("%s", alumno.email);
+        printf("Ingrese la contrase%ca del alumno a modificar: ", 164);
+        scanf("%s", alumno.contrasena);
+        printf("Desea activar o desactivar al alumno? (a/d): ");
+        char opcion;
+        fflush(stdin);
+        scanf("%c", &opcion);
+        if (opcion == 'a'){
+            alumno.estado = ACTIVO;
+        } else if (opcion == 'd'){
+            alumno.estado = INACTIVO;
+        }
+        // Guardar los cambios en el archivo
+        fseek(fAlumnos, -sizeof(Usuario), SEEK_CUR);
+        fwrite(&alumno, sizeof(Usuario), 1, fAlumnos);
+        printf("Alumno modificado correctamente.\n");
+    } else {
+        printf("No existe un alumno con ese id.\n");
+        TeclaParaContinuar();
+    }
 }
 
 void modificarProfesor(FILE *fProfesores){
-    Usuario modificarProfesor;
+    Usuario profesor;
+    int id;
     printf("Ingrese el id del profesor a modificar: ");
-    scanf("%d", &modificarProfesor.id_usuario);
-    printf("Ingrese el nombre del profesor a modificar: ");
-    scanf("%s", modificarProfesor.nombre);
-    printf("Ingrese el apellido del profesor a modificar: ");
-    scanf("%s", modificarProfesor.apellido);
-    printf("Ingrese el email del profesor a modificar: ");
-    scanf("%s", modificarProfesor.email);
-    printf("Ingrese la contraseña del profesor a modificar: ");
-    scanf("%s", modificarProfesor.contrasena);
-    printf("Ingrese el estado del profesor a modificar (activo/inactivo): ");
-    scanf("%s", modificarProfesor.estado);
+    scanf("%d", &id);
+    profesor = buscarProfesor(fProfesores, id);
+    if (profesor.id_usuario == id){
+        printf("Ingrese el nombre del profesor a modificar: ");
+        scanf("%s", profesor.nombre);
+        printf("Ingrese el apellido del profesor a modificar: ");
+        scanf("%s", profesor.apellido);
+        printf("Ingrese el email del profesor a modificar: ");
+        scanf("%s", profesor.email);
+        printf("Ingrese la contrase%ca del profesor a modificar: ", 164);
+        scanf("%s", profesor.contrasena);
+        printf("Desea activar o desactivar al profesor? (a/d): ");
+        char opcion;
+        fflush(stdin);
+        scanf("%c", &opcion);
+        if (opcion == 'a'){
+            profesor.estado = ACTIVO;
+        } else if (opcion == 'd'){
+            profesor.estado = INACTIVO;
+        }
+        // Guardar los cambios en el archivo
+        fseek(fProfesores, -sizeof(Usuario), SEEK_CUR);
+        fwrite(&profesor, sizeof(Usuario), 1, fProfesores);
+        printf("Profesor modificado correctamente.\n");
+    } else {
+        printf("No existe un profesor con ese id.\n");
+        TeclaParaContinuar();
+    }
 }
 
 // Función para mostrar el menú principal
