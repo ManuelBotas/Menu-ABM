@@ -49,7 +49,9 @@ void modificarProfesor(FILE *);
 void menuPrincipal();
 void submenuAlumno(FILE *);
 void submenuProfesor(FILE *);
+void submenuCurso(FILE *);
 void submenuMateria(FILE *);
+void submenuCalificacion(FILE *);
 void submenuConsulta();
 void TeclaParaContinuar();
 const char* getTipoUsuario(tipoUsuario);
@@ -453,6 +455,35 @@ void submenuProfesor(FILE *fProfesores) {
     } while (profOpcion != 5);
 }
 
+void submenuCurso(FILE *fCursos) {
+    int curOpcion;
+    do {
+        system("cls"); // Limpiar la pantalla
+        printf("\n----- Men%c de Curso -----\n", 163);
+        printf("1. Alta\n");
+        printf("2. Consulta\n");
+        printf("3. Volver al Men%c Principal\n", 163);
+        printf("Selecciona una opci%cn: ", 162);
+        scanf("%d", &curOpcion);
+
+        switch (curOpcion) {
+            case 1:
+                altaCurso(fCursos);
+                break;
+            case 2:
+                //consultarCursos();
+                break;
+            case 3:
+                // Volver al menú principal
+                break;
+            default:
+                printf("Opci%cn no v%clida.\n", 162, 160);
+                TeclaParaContinuar();
+                break;
+        }
+    } while (curOpcion != 3);
+}
+
 void submenuMateria(FILE *fMaterias) {
     int matOpcion;
     do {
@@ -480,6 +511,35 @@ void submenuMateria(FILE *fMaterias) {
                 break;
         }
     } while (matOpcion != 3);
+}
+
+void submenuCalificacion(FILE *fCalificaciones) {
+    int calOpcion;
+    do {
+        system("cls"); // Limpiar la pantalla
+        printf("\n----- Men%c de Calificaci%cn -----\n", 163, 162);
+        printf("1. Alta\n");
+        printf("2. Consulta\n");
+        printf("3. Volver al Men%c Principal\n", 163);
+        printf("Selecciona una opci%cn: ", 162);
+        scanf("%d", &calOpcion);
+
+        switch (calOpcion) {
+            case 1:
+                altaCalificacion(fCalificaciones);
+                break;
+            case 2:
+                //consultarCalificaciones();
+                break;
+            case 3:
+                // Volver al menú principal
+                break;
+            default:
+                printf("Opci%cn no v%clida.\n", 162, 160);
+                TeclaParaContinuar();
+                break;
+        }
+    } while (calOpcion != 3);
 }
 
 void submenuConsulta() {
