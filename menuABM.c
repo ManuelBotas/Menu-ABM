@@ -41,7 +41,7 @@ void altaAlumno(FILE *);
 void altaProfesor(FILE *);
 void altaCurso(FILE *);
 void altaMateria(FILE *);
-void altaCalificacion(FILE *);
+void altaCalificacion(FILE *, FILE *, FILE *);
 void bajaAlumno(FILE *);
 void bajaProfesor(FILE *);
 void modificarAlumno(FILE *);
@@ -52,13 +52,14 @@ void submenuAlumno(FILE *);
 void submenuProfesor(FILE *);
 void submenuCurso(FILE *);
 void submenuMateria(FILE *);
-void submenuCalificacion(FILE *);
+void submenuCalificacion(FILE *, FILE *, FILE *);
 void submenuConsulta();
 void TeclaParaContinuar();
 const char* getTipoUsuario(tipoUsuario);
 const char* getEstadoUsuario(estadoUsuario);
 Usuario buscarAlumno(FILE *, int);
 Usuario buscarProfesor(FILE *, int);
+Materia buscarMateria(FILE *, int);
 Curso buscarCurso(FILE *, int);
 void consultarAlumnos(FILE *);
 void consultarProfesores(FILE *);
@@ -176,20 +177,34 @@ void altaMateria(FILE *fMaterias){
     fwrite(&nuevaMateria, sizeof(Materia), 1, fMaterias);
 }
 
-void altaCalificacion(FILE *fCalificaciones){
+void altaCalificacion(FILE *fCalificaciones, FILE *fAlumnos, FILE *fMaterias){
     Calificacion nuevaCalificacion;
+    Usuario alumno;
+    Materia materia;
     printf("Ingrese el id de la calificaci%cn: ", 162);
     scanf("%d", &nuevaCalificacion.id_calificacion);
     printf("Ingrese el id del alumno: ");
     scanf("%d", &nuevaCalificacion.id_alumno);
-    printf("Ingrese el id de la materia: ");
-    scanf("%d", &nuevaCalificacion.id_materia);
-    printf("Ingrese la nota: ");
-    scanf("%d", &nuevaCalificacion.nota);
-    printf("Ingrese el n%cmero de examen: ", 163);
-    scanf("%d", &nuevaCalificacion.num_examen);
-    fseek(fCalificaciones, 0L, SEEK_END);
-    fwrite(&nuevaCalificacion, sizeof(Calificacion), 1, fCalificaciones);
+    alumno = buscarAlumno(fAlumnos, nuevaCalificacion.id_alumno);
+    if (alumno.id_usuario == nuevaCalificacion.id_alumno){
+        printf("Ingrese el id de la materia: ");
+        scanf("%d", &nuevaCalificacion.id_materia);
+        materia = buscarMateria(fMaterias, nuevaCalificacion.id_materia);
+        if (materia.id_materia == nuevaCalificacion.id_materia){
+            printf("Ingrese la nota: ");
+            scanf("%d", &nuevaCalificacion.nota);
+            printf("Ingrese el n%cmero de examen: ", 163);
+            scanf("%d", &nuevaCalificacion.num_examen);
+            fseek(fCalificaciones, 0L, SEEK_END);
+            fwrite(&nuevaCalificacion, sizeof(Calificacion), 1, fCalificaciones);
+        } else {
+            printf("No existe una materia con ese id.\n");
+            TeclaParaContinuar();
+        }
+    } else {
+        printf("No existe un alumno con ese id.\n");
+        TeclaParaContinuar();
+    }
 }
 
 // funciones para las operaciones de baja
@@ -391,7 +406,7 @@ void menuPrincipal() {
                 break;
             case 5:
                 // Submenú de calificación
-                submenuCalificacion(fCalificaciones);
+                submenuCalificacion(fCalificaciones, fAlumnos, fMaterias);
                 break;
             case 6:
                 // Submenú de consulta
@@ -548,7 +563,7 @@ void submenuMateria(FILE *fMaterias) {
     } while (matOpcion != 3);
 }
 
-void submenuCalificacion(FILE *fCalificaciones) {
+void submenuCalificacion(FILE *fCalificaciones, FILE *fAlumnos, FILE *fMaterias) {
     int calOpcion;
     do {
         system("cls"); // Limpiar la pantalla
@@ -561,7 +576,7 @@ void submenuCalificacion(FILE *fCalificaciones) {
 
         switch (calOpcion) {
             case 1:
-                altaCalificacion(fCalificaciones);
+                altaCalificacion(fCalificaciones, fAlumnos, fMaterias);
                 break;
             case 2:
                 consultarCalificaciones(fCalificaciones);
