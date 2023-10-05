@@ -65,7 +65,7 @@ void consultarAlumnos(FILE *);
 void consultarProfesores(FILE *);
 void consultarMaterias(FILE *);
 void consultarCursos(FILE *);
-void consultarCalificaciones(FILE *);
+void consultarCalificaciones(FILE *, FILE *, FILE *);
 
 int main() {
     menuPrincipal(); // Llama a la función del menú principal
@@ -579,7 +579,7 @@ void submenuCalificacion(FILE *fCalificaciones, FILE *fAlumnos, FILE *fMaterias)
                 altaCalificacion(fCalificaciones, fAlumnos, fMaterias);
                 break;
             case 2:
-                consultarCalificaciones(fCalificaciones);
+                consultarCalificaciones(fCalificaciones, fAlumnos, fMaterias);
                 break;
             case 3:
                 // Volver al menú principal
@@ -765,20 +765,28 @@ void consultarCursos(FILE *fMaterias){
     TeclaParaContinuar();
 }
 
-void consultarCalificaciones(FILE *fCalificaciones){
+void consultarCalificaciones(FILE *fCalificaciones, FILE *fAlumnos, FILE *fMaterias){
     Calificacion calificacion;
     rewind(fCalificaciones);
     int hayCalificaciones = 0;
+    
     while (fread(&calificacion, sizeof(Calificacion), 1, fCalificaciones) == 1){
-        printf("\nId: %d\n", calificacion.id_calificacion);
-        printf("Id alumno: %d\n", calificacion.id_alumno);
-        printf("Id materia: %d\n", calificacion.id_materia);
+        // Buscar el nombre del alumno correspondiente al ID
+        Usuario alumno = buscarAlumno(fAlumnos, calificacion.id_alumno);
+        // Buscar el nombre de la materia correspondiente al ID
+        Materia materia = buscarMateria(fMaterias, calificacion.id_materia);
+
+        printf("\nId de examen: %d\n", calificacion.id_calificacion);
+        printf("Alumno: %s %s\n", alumno.nombre, alumno.apellido);
+        printf("Materia: %s\n", materia.nombre);
         printf("Nota: %d\n", calificacion.nota);
         printf("N%cmero de examen: %d\n", 163, calificacion.num_examen);
         hayCalificaciones = 1;
     }
+    
     if (!hayCalificaciones){
         printf("\nNo hay calificaciones cargadas.\n");
     }
+    
     TeclaParaContinuar();
 }
