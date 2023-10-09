@@ -62,6 +62,7 @@ Usuario buscarAlumno(FILE *, int);
 Usuario buscarProfesor(FILE *, int);
 Materia buscarMateria(FILE *, int);
 Curso buscarCurso(FILE *, int);
+Calificacion buscarCalificacion(FILE *, int);
 void consultarAlumnos(FILE *);
 void consultarProfesores(FILE *);
 void consultarMaterias(FILE *);
@@ -179,51 +180,65 @@ void altaCurso(FILE *fCursos){
 
 void altaMateria(FILE *fMaterias){
     Materia nuevaMateria;
+    Materia materia;
     printf("Ingrese el id de la materia: ");
     scanf("%d", &nuevaMateria.id_materia);
-    printf("Ingrese el nombre de la materia: ");
-    scanf("%s", nuevaMateria.nombre);
-    printf("Desea agregar la materia? (s/n): ");
-    if (confirmar() == 's'){
-        fseek(fMaterias, 0L, SEEK_END);
-        fwrite(&nuevaMateria, sizeof(Materia), 1, fMaterias);
+    materia = buscarMateria(fMaterias, nuevaMateria.id_materia);
+    if (materia.id_materia == nuevaMateria.id_materia){
+        printf("Ya existe una materia con ese id.\n");
+        TeclaParaContinuar();
     } else {
-        printf("Materia no agregada.\n");
+        printf("Ingrese el nombre de la materia: ");
+        scanf("%s", nuevaMateria.nombre);
+        printf("Desea agregar la materia? (s/n): ");
+        if (confirmar() == 's'){
+            fseek(fMaterias, 0L, SEEK_END);
+            fwrite(&nuevaMateria, sizeof(Materia), 1, fMaterias);
+        } else {
+            printf("Materia no agregada.\n");
+        }
     }
 }
 
 void altaCalificacion(FILE *fCalificaciones, FILE *fAlumnos, FILE *fMaterias){
     Calificacion nuevaCalificacion;
+    Calificacion calificacion;
     Usuario alumno;
     Materia materia;
     printf("Ingrese el id de la calificaci%cn: ", 162);
     scanf("%d", &nuevaCalificacion.id_calificacion);
-    printf("Ingrese el id del alumno: ");
-    scanf("%d", &nuevaCalificacion.id_alumno);
-    alumno = buscarAlumno(fAlumnos, nuevaCalificacion.id_alumno);
-    if (alumno.id_usuario == nuevaCalificacion.id_alumno){
-        printf("Ingrese el id de la materia: ");
-        scanf("%d", &nuevaCalificacion.id_materia);
-        materia = buscarMateria(fMaterias, nuevaCalificacion.id_materia);
-        if (materia.id_materia == nuevaCalificacion.id_materia){
-            printf("Ingrese la nota: ");
-            scanf("%d", &nuevaCalificacion.nota);
-            printf("Ingrese el n%cmero de examen: ", 163);
-            scanf("%d", &nuevaCalificacion.num_examen);
-            printf("Desea agregar la calificaci%cn? (s/n): ", 162);
-            if (confirmar() == 's'){
-                fseek(fCalificaciones, 0L, SEEK_END);
-                fwrite(&nuevaCalificacion, sizeof(Calificacion), 1, fCalificaciones);
+    calificacion = buscarCalificacion(fCalificaciones, nuevaCalificacion.id_calificacion);
+    if (calificacion.id_calificacion == nuevaCalificacion.id_calificacion){
+        printf("Ya existe una calificaci%cn con ese id.\n", 162);
+        TeclaParaContinuar();
+    } else {
+        printf("Ingrese el id del alumno: ");
+        scanf("%d", &nuevaCalificacion.id_alumno);
+        alumno = buscarAlumno(fAlumnos, nuevaCalificacion.id_alumno);
+        if (alumno.id_usuario == nuevaCalificacion.id_alumno){
+            printf("Ingrese el id de la materia: ");
+            scanf("%d", &nuevaCalificacion.id_materia);
+            materia = buscarMateria(fMaterias, nuevaCalificacion.id_materia);
+            if (materia.id_materia == nuevaCalificacion.id_materia){
+                printf("Ingrese la nota: ");
+                scanf("%d", &nuevaCalificacion.nota);
+                printf("Ingrese el n%cmero de examen: ", 163);
+                scanf("%d", &nuevaCalificacion.num_examen);
+                printf("Desea agregar la calificaci%cn? (s/n): ", 162);
+                if (confirmar() == 's'){
+                    fseek(fCalificaciones, 0L, SEEK_END);
+                    fwrite(&nuevaCalificacion, sizeof(Calificacion), 1, fCalificaciones);
+                } else {
+                    printf("Calificaci%cn no agregada.\n", 162);
+                }
             } else {
-                printf("Calificaci%cn no agregada.\n", 162);
+                printf("No existe una materia con ese id.\n");
+                TeclaParaContinuar();
             }
         } else {
-            printf("No existe una materia con ese id.\n");
+            printf("No existe un alumno con ese id.\n");
             TeclaParaContinuar();
         }
-    } else {
-        printf("No existe un alumno con ese id.\n");
-        TeclaParaContinuar();
     }
 }
 
@@ -732,6 +747,16 @@ Curso buscarCurso(FILE *fCursos, int id) {
         fread(&curso, sizeof(Curso), 1, fCursos);
     }
     return curso;
+}
+
+Calificacion buscarCalificacion(FILE *fCalificaciones, int id) {
+    Calificacion calificacion;
+    rewind(fCalificaciones);
+    fread(&calificacion, sizeof(Calificacion), 1, fCalificaciones);
+    while (!feof(fCalificaciones) && calificacion.id_calificacion != id) {
+        fread(&calificacion, sizeof(Calificacion), 1, fCalificaciones);
+    }
+    return calificacion;
 }
 
 void consultarAlumnos(FILE *fAlumnos){
