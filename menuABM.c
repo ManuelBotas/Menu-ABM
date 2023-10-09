@@ -61,6 +61,7 @@ Usuario buscarAlumno(FILE *, int);
 Usuario buscarProfesor(FILE *, int);
 Materia buscarMateria(FILE *, int);
 Curso buscarCurso(FILE *, int);
+Calificacion buscarCalificacion(FILE *, int, int);
 void consultarAlumnos(FILE *);
 void consultarProfesores(FILE *);
 void consultarMaterias(FILE *);
@@ -181,6 +182,7 @@ void altaCalificacion(FILE *fCalificaciones, FILE *fAlumnos, FILE *fMaterias){
     Calificacion nuevaCalificacion;
     Usuario alumno;
     Materia materia;
+    Calificacion calificacion;
     printf("Ingrese el id de la calificaci%cn: ", 162);
     scanf("%d", &nuevaCalificacion.id_calificacion);
     printf("Ingrese el id del alumno: ");
@@ -195,8 +197,16 @@ void altaCalificacion(FILE *fCalificaciones, FILE *fAlumnos, FILE *fMaterias){
             scanf("%d", &nuevaCalificacion.nota);
             printf("Ingrese el n%cmero de examen: ", 163);
             scanf("%d", &nuevaCalificacion.num_examen);
+            calificacion = buscarCalificacion(fCalificaciones, nuevaCalificacion.id_alumno, nuevaCalificacion.num_examen);
+            if (calificacion.id_calificacion == nuevaCalificacion.id_calificacion){
+                printf("Ya existe una calificaci%cn con ese id y n%cmero de examen.\n", 162, 163);
+                TeclaParaContinuar();
+            } else {
             fseek(fCalificaciones, 0L, SEEK_END);
             fwrite(&nuevaCalificacion, sizeof(Calificacion), 1, fCalificaciones);
+            printf("Calificaci%cn cargada correctamente.\n", 162);
+            TeclaParaContinuar();
+            }
         } else {
             printf("No existe una materia con ese id.\n");
             TeclaParaContinuar();
@@ -691,6 +701,17 @@ Curso buscarCurso(FILE *fCursos, int id) {
         fread(&curso, sizeof(Curso), 1, fCursos);
     }
     return curso;
+}
+
+// funcion para buscar calificacion por id y numero de examen
+Calificacion buscarCalificacion(FILE *fCalificaciones, int id, int num_examen) {
+    Calificacion calificacion;
+    rewind(fCalificaciones);
+    fread(&calificacion, sizeof(Calificacion), 1, fCalificaciones);
+    while (!feof(fCalificaciones) && (calificacion.id_alumno != id || calificacion.num_examen != num_examen)) {
+        fread(&calificacion, sizeof(Calificacion), 1, fCalificaciones);
+    }
+    return calificacion;
 }
 
 void consultarAlumnos(FILE *fAlumnos){
