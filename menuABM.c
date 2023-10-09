@@ -55,6 +55,7 @@ void submenuMateria(FILE *);
 void submenuCalificacion(FILE *, FILE *, FILE *);
 void submenuConsulta();
 void TeclaParaContinuar();
+char confirmar();
 const char* getTipoUsuario(tipoUsuario);
 const char* getEstadoUsuario(estadoUsuario);
 Usuario buscarAlumno(FILE *, int);
@@ -85,10 +86,7 @@ void altaAlumno(FILE *fAlumnos){
         } else {
             printf("Ya existe un alumno con ese id, pero se encuentra inactivo.\n");
             printf("Desea darlo de alta? (s/n): ");
-            char opcion;
-            fflush(stdin);
-            scanf("%c", &opcion);
-            if (opcion == 's'){
+            if (confirmar() == 's'){
                 alumno.estado = ACTIVO;
                 fseek(fAlumnos, -sizeof(Usuario), SEEK_CUR);
                 fwrite(&alumno, sizeof(Usuario), 1, fAlumnos);
@@ -106,8 +104,13 @@ void altaAlumno(FILE *fAlumnos){
         printf("Ingrese la contrase%ca del alumno: ", 164);
         scanf("%s", nuevoAlumno.contrasena);
         nuevoAlumno.estado = ACTIVO;
-        fseek(fAlumnos, 0L, SEEK_END);
-        fwrite(&nuevoAlumno, sizeof(Usuario), 1, fAlumnos);
+        printf("Desea agregar al alumno? (s/n): ");
+        if (confirmar() == 's'){
+            fseek(fAlumnos, 0L, SEEK_END);
+            fwrite(&nuevoAlumno, sizeof(Usuario), 1, fAlumnos);
+        } else {
+            printf("Alumno no agregado.\n");
+        }
     }
 }
 
@@ -123,10 +126,7 @@ void altaProfesor(FILE *fProfesores){
         } else {
             printf("Ya existe un profesor con ese id, pero se encuentra inactivo.\n");
             printf("Desea darlo de alta? (s/n): ");
-            char opcion;
-            fflush(stdin);
-            scanf("%c", &opcion);
-            if (opcion == 's'){
+            if (confirmar() == 's'){
                 profesor.estado = ACTIVO;
                 fseek(fProfesores, -sizeof(Usuario), SEEK_CUR);
                 fwrite(&profesor, sizeof(Usuario), 1, fProfesores);
@@ -144,8 +144,13 @@ void altaProfesor(FILE *fProfesores){
         printf("Ingrese la contrase%ca del profesor: ", 164);
         scanf("%s", nuevoProfesor.contrasena);
         nuevoProfesor.estado = ACTIVO;
-        fseek(fProfesores, 0L, SEEK_END);
-        fwrite(&nuevoProfesor, sizeof(Usuario), 1, fProfesores);
+        printf("Desea agregar al profesor? (s/n): ");
+        if (confirmar() == 's'){
+            fseek(fProfesores, 0L, SEEK_END);
+            fwrite(&nuevoProfesor, sizeof(Usuario), 1, fProfesores);
+        } else {
+            printf("Profesor no agregado.\n");
+        }
     }
 }
 
@@ -161,8 +166,13 @@ void altaCurso(FILE *fCursos){
     } else {
         printf("Ingrese el a%co y divisi%cn del curso: ", 164, 162);
         scanf("%s", nuevoCurso.anio_division);
-        fseek(fCursos, 0L, SEEK_END);
-        fwrite(&nuevoCurso, sizeof(Curso), 1, fCursos);
+        printf("Desea agregar el curso? (s/n): ");
+        if (confirmar() == 's'){
+            fseek(fCursos, 0L, SEEK_END);
+            fwrite(&nuevoCurso, sizeof(Curso), 1, fCursos);
+        } else {
+            printf("Curso no agregado.\n");
+        }
     }
 }
 
@@ -173,8 +183,13 @@ void altaMateria(FILE *fMaterias){
     scanf("%d", &nuevaMateria.id_materia);
     printf("Ingrese el nombre de la materia: ");
     scanf("%s", nuevaMateria.nombre);
-    fseek(fMaterias, 0L, SEEK_END);
-    fwrite(&nuevaMateria, sizeof(Materia), 1, fMaterias);
+    printf("Desea agregar la materia? (s/n): ");
+    if (confirmar() == 's'){
+        fseek(fMaterias, 0L, SEEK_END);
+        fwrite(&nuevaMateria, sizeof(Materia), 1, fMaterias);
+    } else {
+        printf("Materia no agregada.\n");
+    }
 }
 
 void altaCalificacion(FILE *fCalificaciones, FILE *fAlumnos, FILE *fMaterias){
@@ -195,8 +210,13 @@ void altaCalificacion(FILE *fCalificaciones, FILE *fAlumnos, FILE *fMaterias){
             scanf("%d", &nuevaCalificacion.nota);
             printf("Ingrese el n%cmero de examen: ", 163);
             scanf("%d", &nuevaCalificacion.num_examen);
-            fseek(fCalificaciones, 0L, SEEK_END);
-            fwrite(&nuevaCalificacion, sizeof(Calificacion), 1, fCalificaciones);
+            printf("Desea agregar la calificaci%cn? (s/n): ", 162);
+            if (confirmar() == 's'){
+                fseek(fCalificaciones, 0L, SEEK_END);
+                fwrite(&nuevaCalificacion, sizeof(Calificacion), 1, fCalificaciones);
+            } else {
+                printf("Calificaci%cn no agregada.\n", 162);
+            }
         } else {
             printf("No existe una materia con ese id.\n");
             TeclaParaContinuar();
@@ -219,10 +239,7 @@ void bajaAlumno(FILE *fAlumnos) {
             printf("El alumno ya se encuentra inactivo.\n");
         } else {
             printf("Desea dar de baja al alumno? (s/n): ");
-            char opcion;
-            fflush(stdin);
-            scanf("%c", &opcion);
-            if (opcion == 's'){
+            if (confirmar() == 's'){
                 alumno.estado = INACTIVO;
                 fseek(fAlumnos, -sizeof(Usuario), SEEK_CUR);
                 fwrite(&alumno, sizeof(Usuario), 1, fAlumnos);
@@ -246,10 +263,7 @@ void bajaProfesor(FILE *fProfesores) {
             printf("El profesor ya se encuentra inactivo.\n");
         } else {
             printf("Desea dar de baja al profesor? (s/n): ");
-            char opcion;
-            fflush(stdin);
-            scanf("%c", &opcion);
-            if (opcion == 's'){
+            if (confirmar() == 's'){
                 profesor.estado = INACTIVO;
                 fseek(fProfesores, -sizeof(Usuario), SEEK_CUR);
                 fwrite(&profesor, sizeof(Usuario), 1, fProfesores);
@@ -287,10 +301,15 @@ void modificarAlumno(FILE *fAlumnos){
         } else if (opcion == 'd'){
             alumno.estado = INACTIVO;
         }
-        // Guardar los cambios en el archivo
-        fseek(fAlumnos, -sizeof(Usuario), SEEK_CUR);
-        fwrite(&alumno, sizeof(Usuario), 1, fAlumnos);
-        printf("Alumno modificado correctamente.\n");
+        printf("Desea aplicar las modificaciones al alumno? (s/n): ");
+        if (confirmar() == 's'){
+            // Guardar los cambios en el archivo
+            fseek(fAlumnos, -sizeof(Usuario), SEEK_CUR);
+            fwrite(&alumno, sizeof(Usuario), 1, fAlumnos);
+            printf("Alumno modificado correctamente.\n");
+        } else {
+            printf("Alumno no modificado.\n");
+        }
     } else {
         printf("No existe un alumno con ese id.\n");
         TeclaParaContinuar();
@@ -321,10 +340,15 @@ void modificarProfesor(FILE *fProfesores){
         } else if (opcion == 'd'){
             profesor.estado = INACTIVO;
         }
-        // Guardar los cambios en el archivo
-        fseek(fProfesores, -sizeof(Usuario), SEEK_CUR);
-        fwrite(&profesor, sizeof(Usuario), 1, fProfesores);
-        printf("Profesor modificado correctamente.\n");
+        printf("Desea aplicar las modificaciones al profesor? (s/n): ");
+        if (confirmar() == 's'){
+            // Guardar los cambios en el archivo
+            fseek(fProfesores, -sizeof(Usuario), SEEK_CUR);
+            fwrite(&profesor, sizeof(Usuario), 1, fProfesores);
+            printf("Profesor modificado correctamente.\n");
+        } else {
+            printf("Profesor no modificado.\n");
+        }
     } else {
         printf("No existe un profesor con ese id.\n");
         TeclaParaContinuar();
@@ -340,10 +364,15 @@ void modificarCurso(FILE *fCursos){
     if (curso.id_cursada == id){
         printf("Ingrese el a%co y divisi%cn del curso a modificar: ", 164, 162);
         scanf("%s", curso.anio_division); //no acepta espacios
-        // Guardar los cambios en el archivo
-        fseek(fCursos, -sizeof(Curso), SEEK_CUR);
-        fwrite(&curso, sizeof(Curso), 1, fCursos);
-        printf("Curso modificado correctamente.\n");
+        printf("Desea aplicar las modificaciones al curso? (s/n): ");
+        if (confirmar() == 's'){
+            // Guardar los cambios en el archivo
+            fseek(fCursos, -sizeof(Curso), SEEK_CUR);
+            fwrite(&curso, sizeof(Curso), 1, fCursos);
+            printf("Curso modificado correctamente.\n");
+        } else {
+            printf("Curso no modificado.\n");
+        }
     } else {
         printf("No existe un curso con ese id.\n");
         TeclaParaContinuar();
@@ -628,6 +657,18 @@ void submenuConsulta() {
 void TeclaParaContinuar() {
     printf("\nPresiona una tecla para continuar...");
     getch();
+}
+
+char confirmar() {
+    char opcion;
+    fflush(stdin);
+    scanf("%c", &opcion);
+    while (opcion != 's' && opcion != 'n') {
+        printf("Opci%cn no v%clida. Ingrese s/n: ", 162, 160);
+        fflush(stdin);
+        scanf("%c", &opcion);
+    }
+    return opcion;
 }
 
 const char* getTipoUsuario(tipoUsuario tipo) {
