@@ -252,7 +252,6 @@ void altaCalificacion(FILE *fCalificaciones, FILE *fAlumnos, FILE *fMaterias){
     Calificacion calificacion;
     Usuario alumno;
     Materia materia;
-    Calificacion calificacion;
     printf("Ingrese el id de la calificaci%cn: ", 162);
     scanf("%d", &nuevaCalificacion.id_calificacion);
     printf("Ingrese el id del alumno: ");
