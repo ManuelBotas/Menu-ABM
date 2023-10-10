@@ -25,6 +25,9 @@ typedef struct {
 typedef struct {
     int id_cursada;
     char anio_division[45];
+    int id_alumnos[30];
+    int id_materias[8];
+    int id_profesores[8];
 }Curso;
 
 // Definición de una estructura para almacenar las calificaciones
@@ -53,7 +56,7 @@ void submenuProfesor(FILE *);
 void submenuCurso(FILE *);
 void submenuMateria(FILE *);
 void submenuCalificacion(FILE *, FILE *, FILE *);
-void submenuConsulta();
+void submenuConsultasEspeciales();
 void TeclaParaContinuar();
 const char* getTipoUsuario(tipoUsuario);
 const char* getEstadoUsuario(estadoUsuario);
@@ -67,6 +70,7 @@ void consultarProfesores(FILE *);
 void consultarMaterias(FILE *);
 void consultarCursos(FILE *);
 void consultarCalificaciones(FILE *, FILE *, FILE *);
+void consultarCalifAlum(FILE *, FILE *, FILE *);
 
 int main() {
     menuPrincipal(); // Llama a la función del menú principal
@@ -160,12 +164,55 @@ void altaCurso(FILE *fCursos){
         printf("Ya existe un curso con ese id.\n");
         TeclaParaContinuar();
     } else {
+        // Inicializar todos los vectores en cero
+        for (int i = 0; i < 30; i++) {
+            nuevoCurso.id_alumnos[i] = 0;
+        }
+        for (int i = 0; i < 8; i++) {
+            nuevoCurso.id_materias[i] = 0;
+            nuevoCurso.id_profesores[i] = 0;
+        }
+
         printf("Ingrese el a%co y divisi%cn del curso: ", 164, 162);
         scanf("%s", nuevoCurso.anio_division);
+        for (int i = 0; i < 30; i++){
+            printf("Ingrese el id del alumno: ");
+            scanf("%d", &nuevoCurso.id_alumnos[i]);
+            printf("Desea ingresar otro alumno? (s/n): ");
+            char opcion;
+            fflush(stdin);
+            scanf("%c", &opcion);
+            if (opcion == 'n'){
+                i = 30;
+            }
+        }
+        for (int i = 0; i < 8; i++){
+            printf("Ingrese el id de la materia: ");
+            scanf("%d", &nuevoCurso.id_materias[i]);
+            printf("Desea ingresar otra materia? (s/n): ");
+            char opcion;
+            fflush(stdin);
+            scanf("%c", &opcion);
+            if (opcion == 'n'){
+                i = 8;
+            }
+        }
+        for (int i = 0; i < 8; i++){
+            printf("Ingrese el id del profesor: ");
+            scanf("%d", &nuevoCurso.id_profesores[i]);
+            printf("Desea ingresar otro profesor? (s/n): ");
+            char opcion;
+            fflush(stdin);
+            scanf("%c", &opcion);
+            if (opcion == 'n'){
+                i = 8;
+            }
+        }
         fseek(fCursos, 0L, SEEK_END);
         fwrite(&nuevoCurso, sizeof(Curso), 1, fCursos);
     }
 }
+
 
 
 void altaMateria(FILE *fMaterias){
@@ -392,7 +439,7 @@ void menuPrincipal() {
         printf("3. Materia\n");
         printf("4. Curso\n");
         printf("5. Calificaci%cn\n", 162);
-        printf("6. Consulta\n");
+        printf("6. Consultas especiales\n");
         printf("7. Salir\n");
         printf("Selecciona una opci%cn: ", 162);
         scanf("%d", &opcion);
@@ -420,7 +467,7 @@ void menuPrincipal() {
                 break;
             case 6:
                 // Submenú de consulta
-                submenuConsulta();
+                submenuConsultasEspeciales(fCalificaciones, fAlumnos, fMaterias);
                 break;
             case 7:
                 printf("Saliendo del programa. %cHasta luego!\n", 173);
@@ -602,21 +649,22 @@ void submenuCalificacion(FILE *fCalificaciones, FILE *fAlumnos, FILE *fMaterias)
     } while (calOpcion != 3);
 }
 
-void submenuConsulta() {
+void submenuConsultasEspeciales(FILE *fCalificaciones, FILE *fAlumnos, FILE *fMaterias) {
     int altaOpcion;
     do {
         system("cls"); // Limpiar la pantalla
-        printf("\n----- Men%c de Consulta -----\n", 163);
-        printf("1. Consultar Usuarios\n");
-        printf("2. Consultar Cursos y Materias\n");
-        printf("3. Consultar Calificaciones\n");
+        printf("\n----- Men%c de Consultas especiales -----\n", 163);
+        printf("1. Consultar todas las calificaciones de un alumno en espec%cfico\n", 161);
+        printf("2. nn\n");
+        printf("3. nn\n");
         printf("4. Volver al Men%c Principal\n", 163);
         printf("Selecciona una opci%cn: ", 162);
         scanf("%d", &altaOpcion);
 
         switch (altaOpcion) {
             case 1:
-                //consultarUsuarios();
+                //Obtener todas las calificaciones de un alumno en específico
+                consultarCalifAlum(fCalificaciones, fAlumnos, fMaterias);
                 break;
             case 2:
                 //consultarCursosMaterias();
@@ -771,13 +819,32 @@ void consultarMaterias(FILE *fMaterias){
     TeclaParaContinuar();
 }
 
-void consultarCursos(FILE *fMaterias){
+void consultarCursos(FILE *fCursos){
     Curso curso;
-    rewind(fMaterias);
+    rewind(fCursos);
     int hayCursos = 0;
-    while (fread(&curso, sizeof(Curso), 1, fMaterias) == 1){
+    while (fread(&curso, sizeof(Curso), 1, fCursos) == 1){
         printf("\nId: %d\n", curso.id_cursada);
         printf("A%co y divisi%cn: %s\n", 164, 162, curso.anio_division);
+        printf("Alumnos: ");
+        for (int i = 0; i < 30; i++){
+            if (curso.id_alumnos[i] != 0){
+                printf("%d ", curso.id_alumnos[i]);
+            }
+        }
+        printf("\nMaterias: ");
+        for (int i = 0; i < 8; i++){
+            if (curso.id_materias[i] != 0){
+                printf("%d ", curso.id_materias[i]);
+            }
+        }
+        printf("\nProfesores: ");
+        for (int i = 0; i < 8; i++){
+            if (curso.id_profesores[i] != 0){
+                printf("%d ", curso.id_profesores[i]);
+            }
+        }
+        printf("\n");
         hayCursos = 1;
     }
     if (!hayCursos){
@@ -811,3 +878,37 @@ void consultarCalificaciones(FILE *fCalificaciones, FILE *fAlumnos, FILE *fMater
     
     TeclaParaContinuar();
 }
+
+void consultarCalifAlum(FILE *fCalificaciones, FILE *fAlumnos, FILE *fMaterias){
+    Calificacion calificacion;
+    rewind(fCalificaciones);
+    int hayCalificaciones = 0;
+    int id;
+    printf("Ingrese el id del alumno: ");
+    scanf("%d", &id);
+    Usuario alumno = buscarAlumno(fAlumnos, id);
+    if (alumno.id_usuario == id){
+        while (fread(&calificacion, sizeof(Calificacion), 1, fCalificaciones) == 1){
+            if (calificacion.id_alumno == id){
+                // Buscar el nombre de la materia correspondiente al ID
+                Materia materia = buscarMateria(fMaterias, calificacion.id_materia);
+
+                printf("\nId de examen: %d\n", calificacion.id_calificacion);
+                printf("Alumno: %s %s\n", alumno.nombre, alumno.apellido);
+                printf("Materia: %s\n", materia.nombre);
+                printf("Nota: %d\n", calificacion.nota);
+                printf("N%cmero de examen: %d\n", 163, calificacion.num_examen);
+                hayCalificaciones = 1;
+            }
+        }
+        if (!hayCalificaciones){
+            printf("\nNo hay calificaciones cargadas para el alumno %s %s.\n", alumno.nombre, alumno.apellido);
+        }
+    } else {
+        printf("No existe un alumno con ese id.\n");
+    }
+    TeclaParaContinuar();
+}
+
+
+
