@@ -591,6 +591,7 @@ void submenuAlumno(FILE *fAlumnos) {
                 modificarAlumno(fAlumnos);
                 break;
             case 4:
+                system("cls"); // Limpiar la pantalla
                 consultarAlumnos(fAlumnos);
                 break;
             case 5:
@@ -627,6 +628,7 @@ void submenuProfesor(FILE *fProfesores) {
                 modificarProfesor(fProfesores);
                 break;
             case 4:
+                system("cls"); // Limpiar la pantalla
                 consultarProfesores(fProfesores);
                 break;
             case 5:
@@ -657,6 +659,7 @@ void submenuCurso(FILE *fCursos, FILE *fAlumnos, FILE *fProfesores, FILE *fMater
                 altaCurso(fCursos);
                 break;
             case 2:
+                system("cls"); // Limpiar la pantalla
                 consultarCursos(fCursos, fAlumnos, fProfesores, fMaterias);
                 break;
             case 3:
@@ -689,6 +692,7 @@ void submenuMateria(FILE *fMaterias) {
                 altaMateria(fMaterias);
                 break;
             case 2:
+                system("cls"); // Limpiar la pantalla
                 consultarMaterias(fMaterias);
                 break;
             case 3:
@@ -718,6 +722,7 @@ void submenuCalificacion(FILE *fCalificaciones, FILE *fAlumnos, FILE *fMaterias)
                 altaCalificacion(fCalificaciones, fAlumnos, fMaterias);
                 break;
             case 2:
+                system("cls"); // Limpiar la pantalla
                 consultarCalificaciones(fCalificaciones, fAlumnos, fMaterias);
                 break;
             case 3:
