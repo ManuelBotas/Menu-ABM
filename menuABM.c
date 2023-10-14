@@ -751,16 +751,19 @@ void submenuConsultasEspeciales(FILE *fCalificaciones, FILE *fAlumnos, FILE *fMa
         scanf("%d", &altaOpcion);
 
         switch (altaOpcion) {
-            case 1:
+            case 1: 
                 //Obtener todas las calificaciones de un alumno en específico
+                system("cls");
                 consultarCalifAlum(fCalificaciones, fAlumnos, fMaterias);
                 break;
             case 2:
                 //consultar el promedio general de un alumno
+                system("cls");
                 consultarPromAlum(fCalificaciones, fAlumnos, fMaterias);
                 break;
             case 3:
                 //consultar el promedio general de un curso
+                system("cls");
                 consultarPromCurso(fCalificaciones, fAlumnos, fMaterias, fCursos);
                 break;
             case 4:
