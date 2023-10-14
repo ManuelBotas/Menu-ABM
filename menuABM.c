@@ -56,7 +56,7 @@ void submenuProfesor(FILE *);
 void submenuCurso(FILE *, FILE *, FILE *, FILE *);
 void submenuMateria(FILE *);
 void submenuCalificacion(FILE *, FILE *, FILE *);
-void submenuConsultasEspeciales();
+void submenuConsultasEspeciales(FILE *, FILE *, FILE *, FILE *);
 void TeclaParaContinuar();
 char confirmar();
 const char* getTipoUsuario(tipoUsuario);
@@ -72,6 +72,8 @@ void consultarMaterias(FILE *);
 void consultarCursos(FILE *, FILE *, FILE *, FILE *);
 void consultarCalificaciones(FILE *, FILE *, FILE *);
 void consultarCalifAlum(FILE *, FILE *, FILE *);
+void consultarPromAlum(FILE *, FILE *, FILE *);
+void consultarPromCurso(FILE *, FILE *, FILE *, FILE *);
 
 int main() {
     menuPrincipal(); // Llama a la función del menú principal
@@ -549,7 +551,7 @@ void menuPrincipal() {
                 break;
             case 6:
                 // Submenú de consulta
-                submenuConsultasEspeciales(fCalificaciones, fAlumnos, fMaterias);
+                submenuConsultasEspeciales(fCalificaciones, fAlumnos, fMaterias, fCursos);
                 break;
             case 7:
                 printf("Saliendo del programa. %cHasta luego!\n", 173);
@@ -736,14 +738,14 @@ void submenuCalificacion(FILE *fCalificaciones, FILE *fAlumnos, FILE *fMaterias)
     } while (calOpcion != 3);
 }
 
-void submenuConsultasEspeciales(FILE *fCalificaciones, FILE *fAlumnos, FILE *fMaterias) {
+void submenuConsultasEspeciales(FILE *fCalificaciones, FILE *fAlumnos, FILE *fMaterias, FILE *fCursos) {
     int altaOpcion;
     do {
         system("cls"); // Limpiar la pantalla
         printf("\n----- Men%c de Consultas especiales -----\n", 163);
         printf("1. Consultar todas las calificaciones de un alumno en espec%cfico\n", 161);
-        printf("2. nn\n");
-        printf("3. nn\n");
+        printf("2. Consultar el promedio general de un alumno\n");
+        printf("3. Consultar el promedio general de un curso\n");
         printf("4. Volver al Men%c Principal\n", 163);
         printf("Selecciona una opci%cn: ", 162);
         scanf("%d", &altaOpcion);
@@ -754,10 +756,12 @@ void submenuConsultasEspeciales(FILE *fCalificaciones, FILE *fAlumnos, FILE *fMa
                 consultarCalifAlum(fCalificaciones, fAlumnos, fMaterias);
                 break;
             case 2:
-                //consultarCursosMaterias();
+                //consultar el promedio general de un alumno
+                consultarPromAlum(fCalificaciones, fAlumnos, fMaterias);
                 break;
             case 3:
-                //consultarCalificaciones();
+                //consultar el promedio general de un curso
+                consultarPromCurso(fCalificaciones, fAlumnos, fMaterias, fCursos);
                 break;
             case 4:
                 // Volver al menú principal
@@ -1022,5 +1026,74 @@ void consultarCalifAlum(FILE *fCalificaciones, FILE *fAlumnos, FILE *fMaterias){
     TeclaParaContinuar();
 }
 
+void consultarPromAlum(FILE *fCalificaciones, FILE *fAlumnos, FILE *fMaterias){
+    Calificacion calificacion;
+    rewind(fCalificaciones);
+    int hayCalificaciones = 0;
+    int id;
+    printf("Ingrese el id del alumno: ");
+    scanf("%d", &id);
+    Usuario alumno = buscarAlumno(fAlumnos, id);
+    if (alumno.id_usuario == id){
+        int suma = 0;
+        int cant = 0;
+        while (fread(&calificacion, sizeof(Calificacion), 1, fCalificaciones) == 1){
+            if (calificacion.id_alumno == id){
+                suma += calificacion.nota;
+                cant++;
+                hayCalificaciones = 1;
+            }
+        }
+        if (!hayCalificaciones){
+            printf("\nNo hay calificaciones cargadas para el alumno %s %s.\n", alumno.nombre, alumno.apellido);
+        } else {
+            printf("El promedio del alumno %s %s es: %d\n", alumno.nombre, alumno.apellido, suma/cant);
+        }
+    } else {
+        printf("No existe un alumno con ese id.\n");
+    }
+    TeclaParaContinuar();
+}
 
+// consultar promedio de un curso buscando todas las calificaciones de alumno por alumno y materia por materia
+void consultarPromCurso(FILE *fCalificaciones, FILE *fAlumnos, FILE *fMaterias, FILE *fCursos){
+    Calificacion calificacion;
+    rewind(fCalificaciones);
+    int hayCalificaciones = 0;
+    int id;
+    printf("Ingrese el id del curso: ");
+    scanf("%d", &id);
+    Curso curso = buscarCurso(fCursos, id);
+    if (curso.id_cursada == id){
+        int suma = 0;
+        int cant = 0;
+        for (int i = 0; i < 30; i++){ // recorrer los alumnos
+            if (curso.id_alumnos[i] != 0){
+                Usuario alumno = buscarAlumno(fAlumnos, curso.id_alumnos[i]);
+                for (int j = 0; j < 8; j++){ // recorrer las materias
+                    if (curso.id_materias[j] != 0){
+                        Materia materia = buscarMateria(fMaterias, curso.id_materias[j]);
+                        while (fread(&calificacion, sizeof(Calificacion), 1, fCalificaciones) == 1){ // recorrer las calificaciones
+                            if (calificacion.id_alumno == alumno.id_usuario && calificacion.id_materia == materia.id_materia){
+                                suma += calificacion.nota;
+                                cant++;
+                                hayCalificaciones = 1;
+                            }
+                        }
+                        rewind(fCalificaciones); // resetear el puntero del archivo
+                    } 
+                }
+            }
+        }
+        if (!hayCalificaciones){
+            printf("\nNo hay calificaciones cargadas para el curso %s.\n", curso.anio_division);
+        } else {
+            // imprimir el promedio en decimal
+            printf("El promedio del curso %s es: %.2f\n", curso.anio_division, (float)suma/cant);
+        }
+    } else {
+        printf("No existe un curso con ese id.\n");
+    }
+    TeclaParaContinuar();
+}
 
