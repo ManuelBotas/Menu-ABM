@@ -74,6 +74,8 @@ void consultarCalificaciones(FILE *, FILE *, FILE *);
 void consultarCalifAlum(FILE *, FILE *, FILE *);
 void consultarPromAlum(FILE *, FILE *, FILE *);
 void consultarPromCurso(FILE *, FILE *, FILE *, FILE *);
+void consultarAlumnosActivos (FILE *);
+void consultarAlumnosInactivos (FILE *);
 
 int main() {
     menuPrincipal(); // Llama a la función del menú principal
@@ -746,7 +748,8 @@ void submenuConsultasEspeciales(FILE *fCalificaciones, FILE *fAlumnos, FILE *fMa
         printf("1. Consultar todas las calificaciones de un alumno en espec%cfico\n", 161);
         printf("2. Consultar el promedio general de un alumno\n");
         printf("3. Consultar el promedio general de un curso\n");
-        printf("4. Volver al Men%c Principal\n", 163);
+        printf("4. Consultar la lista de alumnos activos o inactivos\n");
+        printf("5. Volver al Men%c Principal\n", 163);
         printf("Selecciona una opci%cn: ", 162);
         scanf("%d", &altaOpcion);
 
@@ -767,6 +770,22 @@ void submenuConsultasEspeciales(FILE *fCalificaciones, FILE *fAlumnos, FILE *fMa
                 consultarPromCurso(fCalificaciones, fAlumnos, fMaterias, fCursos);
                 break;
             case 4:
+                // consultar la lista de alumnos activos o inactivos (preguntar)
+                system("cls");
+                printf("desea consultar la lista de alumnos activos o inactivos? (a/i): ");
+                char opcion;
+                fflush(stdin);
+                scanf("%c", &opcion);
+                if (opcion == 'a'){
+                    consultarAlumnosActivos(fAlumnos);
+                } else if (opcion == 'i'){
+                    consultarAlumnosInactivos(fAlumnos);
+                } else {
+                    printf("Opci%cn no v%clida.\n", 162, 160);
+                    TeclaParaContinuar();
+                }
+                break;
+            case 5:
                 // Volver al menú principal
                 break;
             default:
@@ -774,7 +793,7 @@ void submenuConsultasEspeciales(FILE *fCalificaciones, FILE *fAlumnos, FILE *fMa
                 TeclaParaContinuar();
                 break;
         }
-    } while (altaOpcion != 4);
+    } while (altaOpcion != 5);
 }
 
 void TeclaParaContinuar() {
@@ -1100,3 +1119,44 @@ void consultarPromCurso(FILE *fCalificaciones, FILE *fAlumnos, FILE *fMaterias, 
     TeclaParaContinuar();
 }
 
+void consultarAlumnosActivos(FILE *fAlumnos){
+    Usuario alumno;
+    rewind(fAlumnos);
+    int hayAlumnos = 0;
+    while (fread(&alumno, sizeof(Usuario), 1, fAlumnos) == 1){
+        if (alumno.tipo == ALUMNO && alumno.estado == ACTIVO){
+            printf("\nId: %d\n", alumno.id_usuario);
+            printf("Nombre: %s\n", alumno.nombre);
+            printf("Apellido: %s\n", alumno.apellido);
+            printf("Email: %s\n", alumno.email);
+            printf("Contrase%ca: %s\n", 164, alumno.contrasena);
+            printf("Estado: %s\n", getEstadoUsuario(alumno.estado));
+            hayAlumnos = 1;
+        } 
+    }
+    if (!hayAlumnos){
+        printf("\nNo hay alumnos activos.\n");
+    }
+    TeclaParaContinuar();
+}
+
+void consultarAlumnosInactivos(FILE *fAlumnos){
+    Usuario alumno;
+    rewind(fAlumnos);
+    int hayAlumnos = 0;
+    while (fread(&alumno, sizeof(Usuario), 1, fAlumnos) == 1){
+        if (alumno.tipo == ALUMNO && alumno.estado == INACTIVO){
+            printf("\nId: %d\n", alumno.id_usuario);
+            printf("Nombre: %s\n", alumno.nombre);
+            printf("Apellido: %s\n", alumno.apellido);
+            printf("Email: %s\n", alumno.email);
+            printf("Contrase%ca: %s\n", 164, alumno.contrasena);
+            printf("Estado: %s\n", getEstadoUsuario(alumno.estado));
+            hayAlumnos = 1;
+        } 
+    }
+    if (!hayAlumnos){
+        printf("\nNo hay alumnos inactivos.\n");
+    }
+    TeclaParaContinuar();
+}
