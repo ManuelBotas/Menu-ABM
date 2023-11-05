@@ -86,6 +86,7 @@ int main() {
 void altaAlumno(FILE *fAlumnos){
     Usuario nuevoAlumno;
     Usuario alumno;
+    char conf;
     printf("Ingrese el id del alumno: ");
     scanf("%d", &nuevoAlumno.id_usuario);
     alumno = buscarAlumno(fAlumnos, nuevoAlumno.id_usuario);
@@ -95,7 +96,8 @@ void altaAlumno(FILE *fAlumnos){
         } else {
             printf("Ya existe un alumno con ese id, pero se encuentra inactivo.\n");
             printf("Desea darlo de alta? (s/n): ");
-            if (confirmar() == 's'){
+            conf = confirmar();
+            if (conf == 's' || conf == 'S'){
                 alumno.estado = ACTIVO;
                 fseek(fAlumnos, -sizeof(Usuario), SEEK_CUR);
                 fwrite(&alumno, sizeof(Usuario), 1, fAlumnos);
@@ -114,7 +116,8 @@ void altaAlumno(FILE *fAlumnos){
         scanf("%s", nuevoAlumno.contrasena);
         nuevoAlumno.estado = ACTIVO;
         printf("Desea agregar al alumno? (s/n): ");
-        if (confirmar() == 's'){
+        conf = confirmar();
+        if (conf == 's' || conf == 'S'){
             fseek(fAlumnos, 0L, SEEK_END);
             fwrite(&nuevoAlumno, sizeof(Usuario), 1, fAlumnos);
         } else {
@@ -126,6 +129,7 @@ void altaAlumno(FILE *fAlumnos){
 void altaProfesor(FILE *fProfesores){
     Usuario nuevoProfesor;
     Usuario profesor;
+    char conf;
     printf("Ingrese el id del profesor: ");
     scanf("%d", &nuevoProfesor.id_usuario);
     profesor = buscarProfesor(fProfesores, nuevoProfesor.id_usuario);
@@ -135,7 +139,8 @@ void altaProfesor(FILE *fProfesores){
         } else {
             printf("Ya existe un profesor con ese id, pero se encuentra inactivo.\n");
             printf("Desea darlo de alta? (s/n): ");
-            if (confirmar() == 's'){
+            conf = confirmar();
+            if (conf == 's' || conf == 'S'){
                 profesor.estado = ACTIVO;
                 fseek(fProfesores, -sizeof(Usuario), SEEK_CUR);
                 fwrite(&profesor, sizeof(Usuario), 1, fProfesores);
@@ -154,7 +159,8 @@ void altaProfesor(FILE *fProfesores){
         scanf("%s", nuevoProfesor.contrasena);
         nuevoProfesor.estado = ACTIVO;
         printf("Desea agregar al profesor? (s/n): ");
-        if (confirmar() == 's'){
+        conf = confirmar();
+        if (conf == 's' || conf == 'S'){
             fseek(fProfesores, 0L, SEEK_END);
             fwrite(&nuevoProfesor, sizeof(Usuario), 1, fProfesores);
         } else {
@@ -166,6 +172,7 @@ void altaProfesor(FILE *fProfesores){
 void altaCurso(FILE *fCursos){
     Curso nuevoCurso;
     Curso curso;
+    char conf;
     printf("Ingrese el id del curso: ");
     scanf("%d", &nuevoCurso.id_cursada);
     curso = buscarCurso(fCursos, nuevoCurso.id_cursada);
@@ -218,7 +225,8 @@ void altaCurso(FILE *fCursos){
             }
         }
         printf("Desea agregar el curso? (s/n): ");
-        if (confirmar() == 's'){
+        conf = confirmar();
+        if (conf == 's' || conf == 'S'){
             fseek(fCursos, 0L, SEEK_END);
             fwrite(&nuevoCurso, sizeof(Curso), 1, fCursos);
         } else {
@@ -232,6 +240,7 @@ void altaCurso(FILE *fCursos){
 void altaMateria(FILE *fMaterias){
     Materia nuevaMateria;
     Materia materia;
+    char conf;
     printf("Ingrese el id de la materia: ");
     scanf("%d", &nuevaMateria.id_materia);
     materia = buscarMateria(fMaterias, nuevaMateria.id_materia);
@@ -242,7 +251,8 @@ void altaMateria(FILE *fMaterias){
         printf("Ingrese el nombre de la materia: ");
         scanf("%s", nuevaMateria.nombre);
         printf("Desea agregar la materia? (s/n): ");
-        if (confirmar() == 's'){
+        conf = confirmar();
+        if (conf == 's' || conf == 'S'){
             fseek(fMaterias, 0L, SEEK_END);
             fwrite(&nuevaMateria, sizeof(Materia), 1, fMaterias);
         } else {
@@ -256,6 +266,7 @@ void altaCalificacion(FILE *fCalificaciones, FILE *fAlumnos, FILE *fMaterias){
     Calificacion calificacion;
     Usuario alumno;
     Materia materia;
+    char conf;
     printf("Ingrese el id de la calificaci%cn: ", 162);
     scanf("%d", &nuevaCalificacion.id_calificacion);
     printf("Ingrese el id del alumno: ");
@@ -276,7 +287,8 @@ void altaCalificacion(FILE *fCalificaciones, FILE *fAlumnos, FILE *fMaterias){
                 TeclaParaContinuar();
             } else {
                 printf("Desea agregar la calificaci%cn? (s/n): ", 162);
-                if (confirmar() == 's'){
+                conf = confirmar();
+                if (conf == 's' || conf == 'S'){
                     fseek(fCalificaciones, 0L, SEEK_END);
                     fwrite(&nuevaCalificacion, sizeof(Calificacion), 1, fCalificaciones);
                     printf("Calificaci%cn cargada correctamente.\n", 162);
@@ -299,6 +311,7 @@ void altaCalificacion(FILE *fCalificaciones, FILE *fAlumnos, FILE *fMaterias){
 void bajaAlumno(FILE *fAlumnos) {
     Usuario alumno;
     int id;
+    char conf;
     printf("Ingrese el ID del alumno a dar de baja: ");
     scanf("%d", &id);
     alumno = buscarAlumno(fAlumnos, id);
@@ -307,7 +320,8 @@ void bajaAlumno(FILE *fAlumnos) {
             printf("El alumno ya se encuentra inactivo.\n");
         } else {
             printf("Desea dar de baja al alumno? (s/n): ");
-            if (confirmar() == 's'){
+            conf = confirmar();
+            if (conf == 's' || conf == 'S'){
                 alumno.estado = INACTIVO;
                 fseek(fAlumnos, -sizeof(Usuario), SEEK_CUR);
                 fwrite(&alumno, sizeof(Usuario), 1, fAlumnos);
@@ -323,6 +337,7 @@ void bajaAlumno(FILE *fAlumnos) {
 void bajaProfesor(FILE *fProfesores) {
     Usuario profesor;
     int id;
+    char conf;
     printf("Ingrese el ID del profesor a dar de baja: ");
     scanf("%d", &id);
     profesor = buscarAlumno(fProfesores, id);
@@ -331,7 +346,8 @@ void bajaProfesor(FILE *fProfesores) {
             printf("El profesor ya se encuentra inactivo.\n");
         } else {
             printf("Desea dar de baja al profesor? (s/n): ");
-            if (confirmar() == 's'){
+            conf = confirmar();
+            if (conf == 's' || conf == 'S'){
                 profesor.estado = INACTIVO;
                 fseek(fProfesores, -sizeof(Usuario), SEEK_CUR);
                 fwrite(&profesor, sizeof(Usuario), 1, fProfesores);
@@ -348,6 +364,7 @@ void bajaProfesor(FILE *fProfesores) {
 void modificarAlumno(FILE *fAlumnos){
     Usuario alumno;
     int id;
+    char conf;
     printf("Ingrese el id del alumno a modificar: ");
     scanf("%d", &id);
     alumno = buscarAlumno(fAlumnos, id);
@@ -370,7 +387,8 @@ void modificarAlumno(FILE *fAlumnos){
             alumno.estado = INACTIVO;
         }
         printf("Desea aplicar las modificaciones al alumno? (s/n): ");
-        if (confirmar() == 's'){
+        conf = confirmar();
+        if (conf == 's' || conf == 'S'){
             // Guardar los cambios en el archivo
             fseek(fAlumnos, -sizeof(Usuario), SEEK_CUR);
             fwrite(&alumno, sizeof(Usuario), 1, fAlumnos);
@@ -387,6 +405,7 @@ void modificarAlumno(FILE *fAlumnos){
 void modificarProfesor(FILE *fProfesores){
     Usuario profesor;
     int id;
+    char conf;
     printf("Ingrese el id del profesor a modificar: ");
     scanf("%d", &id);
     profesor = buscarProfesor(fProfesores, id);
@@ -409,7 +428,8 @@ void modificarProfesor(FILE *fProfesores){
             profesor.estado = INACTIVO;
         }
         printf("Desea aplicar las modificaciones al profesor? (s/n): ");
-        if (confirmar() == 's'){
+        conf = confirmar();
+        if (conf == 's' || conf == 'S'){
             // Guardar los cambios en el archivo
             fseek(fProfesores, -sizeof(Usuario), SEEK_CUR);
             fwrite(&profesor, sizeof(Usuario), 1, fProfesores);
@@ -427,6 +447,7 @@ void modificarProfesor(FILE *fProfesores){
 void modificarCurso(FILE *fCursos, FILE *fAlumnos, FILE *fProfesores, FILE *fMaterias) {
     int id;
     Curso curso;
+    char conf;
     printf("Ingrese el id del curso a modificar: ");
     scanf("%d", &id);
     curso = buscarCurso(fCursos, id);
@@ -477,7 +498,8 @@ void modificarCurso(FILE *fCursos, FILE *fAlumnos, FILE *fProfesores, FILE *fMat
         }
         // Guardar los cambios en el archivo
         printf("Desea aplicar las modificaciones al curso? (s/n): ");
-        if (confirmar() == 's'){
+        conf = confirmar();
+        if (conf == 's' || conf == 'S'){
             // Guardar los cambios en el archivo
             fseek(fCursos, -sizeof(Curso), SEEK_CUR);
             fwrite(&curso, sizeof(Curso), 1, fCursos);
@@ -805,7 +827,7 @@ char confirmar() {
     char opcion;
     fflush(stdin);
     scanf("%c", &opcion);
-    while (opcion != 's' && opcion != 'n') {
+    while (opcion != 's' && opcion != 'n' && opcion != 'S' && opcion != 'N') {
         printf("Opci%cn no v%clida. Ingrese s/n: ", 162, 160);
         fflush(stdin);
         scanf("%c", &opcion);
@@ -951,7 +973,7 @@ void consultarCursos(FILE *fCursos, FILE *fAlumnos, FILE *fProfesores, FILE *fMa
 
     while (fread(&curso, sizeof(Curso), 1, fCursos) == 1) {
         printf("\nId del curso: %d\n", curso.id_cursada);
-        printf("Anio y Division: %s\n", curso.anio_division);
+        printf("A%co y Division: %s\n", 164, curso.anio_division);
 
         // Mostrar alumnos inscritos en el curso
         printf("Alumnos inscritos:\n");
