@@ -951,7 +951,7 @@ void consultarCursos(FILE *fCursos, FILE *fAlumnos, FILE *fProfesores, FILE *fMa
 
     while (fread(&curso, sizeof(Curso), 1, fCursos) == 1) {
         printf("\nId del curso: %d\n", curso.id_cursada);
-        printf("Anio y Division: %s\n", curso.anio_division);
+        printf("A%co y Division: %s\n", 164, curso.anio_division);
 
         // Mostrar alumnos inscritos en el curso
         printf("Alumnos inscritos:\n");
